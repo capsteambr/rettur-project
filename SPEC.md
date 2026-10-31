@@ -1,5 +1,11 @@
 # 📋 SPEC.md - Especificação Técnica e Funcional do Produto
 
+> **Autores / Integrantes do Projeto:**  
+> - **Daniel Douglas Melo Gomes Neto**  
+> - **Lucas Pereira Brito**  
+
+---
+
 ## 1. Visão Geral do Produto
 
 ### 1.1 Objetivo

@@ -1,5 +1,11 @@
 # 🤖 AGENTS.md - Arquitetura de Agentes & Diretrizes de Desenvolvimento
 
+> **Autores / Integrantes do Projeto:**  
+> - **Daniel Douglas Melo Gomes Neto**  
+> - **Lucas Pereira Brito**  
+
+---
+
 Este documento define:
 1. **A Arquitetura de Agentes de IA do Domínio:** Os agentes cognitivos especializados responsáveis por ler, auditar e simplificar os contratos para os usuários.
 2. **Diretrizes para Agentes de Codificação (AI Coding Assistants):** Regras de conduta, padrões arquiteturais e boas práticas para agentes de IA que desenvolvam código neste repositório.

@@ -143,6 +143,9 @@ GEMINI_API_KEY=sua-chave-aqui
 
 ---
 
-## 👥 Equipe do Hackathon & Licença
+## 👥 Equipe do Hackathon & Autores
+- **Daniel Douglas Melo Gomes Neto**
+- **Lucas Pereira Brito**
+
 Projeto desenvolvido com foco em impacto social e acessibilidade jurídica.  
 Distribuído sob a licença **MIT**.
