@@ -1,6 +1,8 @@
 from fastapi import APIRouter
 from app.core.config import settings
 from app.schemas.contract import ProviderInfo, ProvidersResponse
+from app.schemas.ai_test import TestConnectionRequest, TestConnectionResponse
+from app.services.model_discovery import ModelDiscoveryService
 
 router = APIRouter()
 
@@ -22,7 +24,7 @@ async def list_providers():
             name="Google Gemini",
             configured=bool(settings.GEMINI_API_KEY),
             default_model=settings.GEMINI_DEFAULT_MODEL,
-            description="Modelo de IA rápido e de alta capacidade na nuvem do Google."
+            description="Modelo de IA rápido e de alta capacidade na nuvem do Google (Gemini 2.5 Flash)."
         ),
         ProviderInfo(
             id="ollama",
@@ -44,3 +46,13 @@ async def list_providers():
         active_provider=settings.AI_PROVIDER,
         available_providers=providers
     )
+
+
+@router.post("/ai/test", response_model=TestConnectionResponse, summary="Testa chave e lista modelos compatíveis")
+async def test_and_list_models(payload: TestConnectionRequest):
+    return await ModelDiscoveryService.test_and_list(
+        provider=payload.provider,
+        api_key=payload.api_key,
+        base_url=payload.base_url
+    )
+

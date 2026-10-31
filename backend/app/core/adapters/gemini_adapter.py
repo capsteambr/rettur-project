@@ -7,9 +7,9 @@ from app.schemas.contract import ContractAnalysisResponse
 class GeminiAdapter(BaseAIAdapter):
     """Adaptador para Google Gemini via REST API direta (suporta BYO-Key)."""
 
-    def __init__(self, api_key: str, model_name: str = "gemini-1.5-flash"):
+    def __init__(self, api_key: str, model_name: str = "gemini-flash-lite-latest"):
         self.api_key = api_key
-        self.model_name = model_name or "gemini-1.5-flash"
+        self.model_name = model_name or "gemini-flash-lite-latest"
         self.endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{self.model_name}:generateContent"
 
     async def analyze_contract(

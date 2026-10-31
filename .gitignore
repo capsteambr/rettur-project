@@ -1,0 +1,97 @@
+# ==========================================
+# 🐼 CONDINOME PANDA - MONOREPO .GITIGNORE
+# ==========================================
+
+# Arquivos de Sistema
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ==========================================
+# Segredos e Credenciais (LGPD / Segurança)
+# ==========================================
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.cert
+
+# ==========================================
+# Frontend Web (Node / React / Vite)
+# ==========================================
+**/node_modules/
+**/dist/
+**/dist-ssr/
+**/.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ==========================================
+# Backend Python (FastAPI / Pytest)
+# ==========================================
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Ambientes virtuais Python
+**/.venv/
+**/venv/
+**/ENV/
+**/env/
+
+# Testes e Cobertura
+**/.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# ==========================================
+# Mobile (Flutter / Dart)
+# ==========================================
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/build/
+**/ephemeral/
+.packages
+.pub-cache/
+.pub/
+android/app/debug/
+android/app/profile/
+android/app/release/
+ios/Flutter/Generated.xcconfig
+ios/Flutter/app.framework
+ios/Pods/
+
+# ==========================================
+# IDEs e Editores
+# ==========================================
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
