@@ -1,0 +1,93 @@
+@if (donationService.isOpen()) {
+  <div class="donation-modal-overlay" (click)="onBackdropClick($event)" role="dialog" aria-modal="true" aria-labelledby="donation-modal-title">
+    <div class="donation-modal-box">
+      
+      <!-- Cabeçalho do Modal -->
+      <div class="modal-header">
+        <div class="modal-header-title-wrap">
+          <div class="modal-icon-badge">
+            <i class="fas fa-mug-hot"></i>
+          </div>
+          <div>
+            <span class="modal-pre-title">Apoie o OpenCNPJ &amp; OpenCaramelo</span>
+            <h2 id="donation-modal-title" class="modal-title">Pague um Café aos Desenvolvedores</h2>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal" (click)="close()" aria-label="Fechar modal" title="Fechar (Esc)">
+          <i class="fas fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Corpo do Modal -->
+      <div class="modal-body">
+        <p class="modal-description">
+          O <strong>OpenCNPJ</strong> é uma ferramenta 100% livre e gratuita desenvolvida junto à iniciativa OpenCaramelo. Sua contribuição ajuda a manter os servidores ativos, cobrir a infraestrutura e incentivar o ecossistema aberto.
+        </p>
+
+        <div class="donation-options-grid">
+          
+          <!-- Opção 1: Mercado Pago (PIX) -->
+          <a href="https://link.mercadopago.com.br/opencaramelo" 
+             target="_blank" 
+             rel="noopener noreferrer" 
+             class="donation-card donation-card-mp">
+            <div class="donation-card-header">
+              <div class="donation-badge-icon mp-icon">
+                <i class="fas fa-bolt"></i>
+              </div>
+              <div class="donation-card-titles">
+                <div class="donation-title-line">
+                  <h3 class="donation-option-title">Mercado Pago (PIX)</h3>
+                  <span class="donation-tag tag-br"><i class="fas fa-shield-halved"></i> Brasil</span>
+                </div>
+                <span class="donation-option-subtitle">Aprovação imediata via PIX</span>
+              </div>
+            </div>
+            <p class="donation-card-text">
+              Faça uma doação em Reais (BRL) através de PIX ou cartão pelo Mercado Pago. Simples, rápido e sem taxas de conversão de moeda.
+            </p>
+            <div class="donation-card-action mp-action">
+              <span>Apoiar via Mercado Pago</span>
+              <i class="fas fa-arrow-up-right-from-square"></i>
+            </div>
+          </a>
+
+          <!-- Opção 2: Buy Me a Coffee -->
+          <a href="https://buymeacoffee.com/opencaramelo" 
+             target="_blank" 
+             rel="noopener noreferrer" 
+             class="donation-card donation-card-bmac">
+            <div class="donation-card-header">
+              <div class="donation-badge-icon bmac-icon">
+                <i class="fas fa-mug-hot"></i>
+              </div>
+              <div class="donation-card-titles">
+                <div class="donation-title-line">
+                  <h3 class="donation-option-title">Buy Me a Coffee</h3>
+                  <span class="donation-tag tag-intl"><i class="fas fa-globe"></i> Internacional</span>
+                </div>
+                <span class="donation-option-subtitle">Cartão internacional & Global</span>
+              </div>
+            </div>
+            <p class="donation-card-text">
+              Doe um ou mais cafés virtuais usando seu cartão internacional em USD/EUR. Ideal para quem apoia de fora do Brasil.
+            </p>
+            <div class="donation-card-action bmac-action">
+              <span>Acessar Buy Me a Coffee</span>
+              <i class="fas fa-arrow-up-right-from-square"></i>
+            </div>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- Rodapé do Modal -->
+      <div class="modal-footer">
+        <p class="footer-heart-text">
+          <i class="fas fa-heart text-amber"></i> Toda contribuição faz a diferença para manter as APIs e ferramentas livres!
+        </p>
+      </div>
+
+    </div>
+  </div>
+}

@@ -1,0 +1,181 @@
+<div class="terminal-page-wrapper">
+  <!-- Mode Switcher Header Bar -->
+  <div class="mode-switcher-bar">
+    <div class="switcher-brand">
+      <i class="fas fa-terminal"></i>
+      <span>OpenCNPJ Terminal Linux</span>
+    </div>
+
+    <div class="switcher-links">
+      <button 
+        type="button" 
+        class="switch-btn sound-toggle-btn" 
+        (click)="toggleSound()"
+        [title]="isMuted ? 'Clique para ativar som de digitação' : 'Clique para desativar som'">
+        <i class="fas" [class.fa-volume-high]="!isMuted" [class.fa-volume-xmark]="isMuted"></i>
+        <span>Som: {{ isMuted ? 'Mudo' : 'Ligado' }}</span>
+      </button>
+
+      <a 
+        [routerLink]="currentCnpj() ? ['/', currentCnpj()] : ['/']" 
+        class="switch-btn">
+        <i class="fas fa-file-invoice"></i> Modo Padrão
+      </a>
+      <span class="switch-btn active">
+        <i class="fab fa-linux"></i> Terminal Linux (Ativo)
+      </span>
+      <a 
+        [routerLink]="currentCnpj() ? ['/windows', currentCnpj()] : ['/windows']" 
+        class="switch-btn">
+        <i class="fab fa-windows"></i> Desktop Windows 98
+      </a>
+    </div>
+  </div>
+
+  <!-- CRT Monitor Container -->
+  <div class="monitor-container">
+    <div class="monitor">
+      <div class="screen" (click)="focusInput()">
+        <!-- Matrix Rain Canvas -->
+        <canvas id="matrix-canvas" #matrixCanvas></canvas>
+
+        <!-- Terminal Content Area -->
+        <div class="terminal" #terminal>
+          @for (line of lines; track $index) {
+            <div [class]="'line ' + (line.class || '')" [innerHTML]="line.text | safeHtml"></div>
+          }
+
+          <!-- Copy Result Button -->
+          @if (copyableText) {
+            <div class="line copy-line">
+              <button type="button" class="copy-button" (click)="copyToClipboard()">
+                <i class="fas" [class.fa-check]="isCopied" [class.fa-copy]="!isCopied"></i>
+                <span>{{ isCopied ? ' [ Copiado para a área de transferência! ]' : ' [ Copiar Ficha Completa ]' }}</span>
+              </button>
+            </div>
+          }
+
+          <!-- Input Prompt -->
+          @if (isBooted) {
+            <div class="line prompt">
+              <span class="prompt-label">{{ currentLabel }}&nbsp;</span>
+              <span 
+                #inputArea 
+                class="input-area" 
+                contenteditable="true" 
+                (keydown)="handleKeyDown($event)"
+                (input)="handleInput($event)"
+                spellcheck="false"></span>
+              <span class="cursor"></span>
+            </div>
+          }
+        </div>
+
+        <!-- DOS Game Popup -->
+        @if (isGameRunning) {
+          <div class="game-popup">
+            <div #dosGameContainer id="dos-game-container"></div>
+            <button type="button" class="game-close-btn" (click)="stopGame()">
+              <i class="fas fa-xmark"></i> Fechar Jogo (ESC)
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- StartX Integrated X11 Desktop Overlay -->
+  @if (isStartXRunning) {
+    <div class="x11-desktop-overlay">
+      <!-- Top Panel -->
+      <div class="x11-panel">
+        <div class="x11-panel-left">
+          <i class="fab fa-linux x11-distro-icon"></i>
+          <span class="x11-distro-title">Debian GNU/Linux 12 (bookworm) • X11 Session</span>
+        </div>
+        <div class="x11-panel-center">
+          <span class="x11-clock"><i class="far fa-clock"></i> {{ startXClock }}</span>
+        </div>
+        <div class="x11-panel-right">
+          <button type="button" class="btn-x11-exit" (click)="closeStartX(false)" title="Fechar ambiente gráfico e voltar ao terminal">
+            <i class="fas fa-arrow-left"></i>
+            <span>Sair / Voltar ao Terminal</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- X11 Terminal Window -->
+      <div 
+        class="x11-window" 
+        [class.maximized]="startXIsMaximized"
+        [class.minimized]="startXIsMinimized"
+        [style.left.px]="!startXIsMaximized ? startXPos.x : null"
+        [style.top.px]="!startXIsMaximized ? startXPos.y : null">
+        
+        <div class="x11-title-bar" (mousedown)="onStartXMouseDown($event)">
+          <div class="x11-title">
+            <i class="fas fa-terminal"></i> daniel&#64;debian: ~
+          </div>
+          <div class="x11-window-controls">
+            <div class="x11-ctrl-btn minimize" (click)="toggleStartXMinimize()" title="Minimizar"></div>
+            <div class="x11-ctrl-btn maximize" (click)="toggleStartXMaximize()" title="Maximizar"></div>
+            <div class="x11-ctrl-btn close" (click)="closeStartX(false)" title="Fechar (Voltar ao Terminal)"></div>
+          </div>
+        </div>
+
+        @if (!startXIsMinimized) {
+          <div class="x11-terminal-body" #startXTerminalBody (click)="focusStartXInput()">
+            @for (h of startXHistory; track $index) {
+              <div class="x11-history-line" [class.error-line]="h.isError" [class.success-line]="h.isSuccess">
+                @if (h.label) {
+                  <span class="x11-prompt-label">{{ h.label }}&nbsp;</span>
+                }
+                <span class="x11-history-value">{{ h.value }}</span>
+              </div>
+            }
+
+            @if (startXState === 'LOGIN') {
+              <div class="x11-active-line">
+                <span class="x11-prompt-label">login:&nbsp;</span>
+                <input 
+                  id="startx-active-input"
+                  type="text" 
+                  class="x11-inline-input"
+                  [(ngModel)]="startXCurrentInput"
+                  (keydown)="handleStartXKeyDown($event)"
+                  autocomplete="off"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  spellcheck="false" />
+              </div>
+            }
+
+            @if (startXState === 'PASSWORD') {
+              <div class="x11-active-line">
+                <span class="x11-prompt-label">Password:&nbsp;</span>
+                <input 
+                  id="startx-active-input"
+                  type="password" 
+                  class="x11-inline-input"
+                  [(ngModel)]="startXCurrentInput"
+                  (keydown)="handleStartXKeyDown($event)"
+                  autocomplete="off"
+                  spellcheck="false" />
+              </div>
+            }
+
+            @if (startXState === 'SUCCESS') {
+              <div class="x11-success-card">
+                <i class="fas fa-trophy"></i>
+                <div>
+                  <strong>Autenticação confirmada com sucesso!</strong>
+                  <div>Retornando ao terminal com o Easter Egg desbloqueado...</div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

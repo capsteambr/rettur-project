@@ -1,0 +1,276 @@
+:root {
+  --bg-main: #0A101C;
+  --bg-card: #1A202C;
+  --bg-secondary-section: #121826;
+  --primary-text: #E0E6EF;
+  --secondary-text: #A0AEC0;
+  --accent-color: #00CCB3;
+  --accent-hover: #1AE0C0;
+  --border-color: #2D3748;
+  --code-bg: #222B38;
+  --btn-donate-bg: #FFD54F;
+  --btn-donate-text: #121826;
+  --btn-donate-hover: #FFE98D;
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  color-scheme: dark;
+}
+
+body.light-theme, html.light-theme, :root.light-theme {
+  --accent-color: #008f7b;
+  --accent-hover: #007362;
+  --bg-main: #F8FAFC;
+  --bg-card: #FFFFFF;
+  --bg-secondary-section: #EDF2F7;
+  --primary-text: #1A202C;
+  --secondary-text: #4A5568;
+  --border-color: #DDE2E7;
+  --code-bg: #E6EEF2;
+  --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  color-scheme: light;
+}
+
+/* Previne qualquer transição visual durante o carregamento inicial da página */
+html.no-transitions,
+html.no-transitions *,
+html.no-transitions *::before,
+html.no-transitions *::after {
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -ms-transition: none !important;
+  -o-transition: none !important;
+  transition: none !important;
+}
+
+/* Transições suaves aplicadas SOMENTE durante a troca manual de tema via botão */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, fill 0.3s ease, stroke 0.3s ease !important;
+  transition-delay: 0s !important;
+}
+
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+}
+
+html { 
+  scroll-behavior: smooth; 
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--primary-text);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  max-width: 100%;
+  width: 100%;
+}
+
+.container {
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 0 25px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 12px;
+  }
+}
+
+h1, h2, h3, h4 { 
+  font-weight: 700; 
+  margin-bottom: 1rem; 
+  color: var(--primary-text); 
+}
+
+h2.gradient-title {
+  font-size: 2.3rem; 
+  text-align: center; 
+  margin-bottom: 2.5rem;
+  color: var(--primary-text);
+   
+  
+}
+
+p { 
+  color: var(--secondary-text); 
+  margin-bottom: 1rem; 
+}
+
+a { 
+  color: var(--accent-color); 
+  text-decoration: none; 
+  transition: color 0.3s ease; 
+}
+
+a:hover {
+  color: var(--accent-hover);
+}
+
+.centered-content { 
+  text-align: center; 
+  max-width: 700px; 
+  margin: 0 auto; 
+}
+
+.btn { 
+  padding: 0.8rem 1.8rem; 
+  border-radius: 8px; 
+  font-weight: 600; 
+  transition: all 0.3s ease; 
+  border: none; 
+  cursor: pointer; 
+  display: inline-flex; 
+  align-items: center; 
+  justify-content: center;
+  gap: 0.5rem; 
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+
+.btn-primary,
+a.btn-primary,
+button.btn-primary { 
+  background-color: var(--accent-color); 
+  color: #0A101C !important; 
+}
+
+.btn-primary:hover,
+a.btn-primary:hover,
+button.btn-primary:hover { 
+  background-color: var(--accent-hover); 
+  color: #0A101C !important;
+  transform: translateY(-2px); 
+  box-shadow: 0 4px 20px rgba(0, 204, 179, 0.3); 
+}
+
+.btn-secondary,
+a.btn-secondary,
+button.btn-secondary { 
+  background-color: transparent; 
+  color: var(--primary-text) !important; 
+  border: 1px solid var(--border-color); 
+}
+
+.btn-secondary:hover,
+a.btn-secondary:hover,
+button.btn-secondary:hover { 
+  background-color: var(--border-color); 
+  border-color: var(--accent-color); 
+  color: var(--accent-color) !important;
+}
+
+.btn-donate,
+a.btn-donate,
+button.btn-donate { 
+  background-color: var(--btn-donate-bg); 
+  color: var(--btn-donate-text) !important; 
+}
+
+.btn-donate:hover,
+a.btn-donate:hover,
+button.btn-donate:hover { 
+  background-color: var(--btn-donate-hover); 
+  color: var(--btn-donate-text) !important;
+  transform: translateY(-2px); 
+  box-shadow: 0 4px 20px rgba(255, 213, 79, 0.3); 
+}
+
+.btn-sm {
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+.code-block {
+  background-color: var(--code-bg);
+  border-radius: 8px;
+  padding: 1.25rem 1.75rem;
+  overflow-x: auto;
+  font-family: 'Fira Code', 'SF Mono', Consolas, monospace;
+  font-size: 0.85rem;
+  color: #E0E6EF;
+  line-height: 1.5;
+  border: 1px solid var(--border-color);
+}
+
+.light-theme .code-block,
+body.light-theme .code-block { 
+  color: #2D3748; 
+}
+
+.code-block .json-key { color: #70b4ec; }
+.code-block .json-string { color: #87C49A; }
+.code-block .json-number { color: #FFB37C; }
+.code-block .json-boolean { color: #C6A2E8; }
+.code-block .json-null { color: #FF7F7F; }
+.code-block .json-brace { color: var(--primary-text); }
+
+.light-theme .code-block .json-key,
+body.light-theme .code-block .json-key { color: #007acc; }
+.light-theme .code-block .json-string,
+body.light-theme .code-block .json-string { color: #2e7d32; }
+.light-theme .code-block .json-number,
+body.light-theme .code-block .json-number { color: #d9534f; }
+.light-theme .code-block .json-boolean,
+body.light-theme .code-block .json-boolean { color: #8e24aa; }
+.light-theme .code-block .json-null,
+body.light-theme .code-block .json-null { color: #c9302c; }
+.light-theme .code-block .json-brace,
+body.light-theme .code-block .json-brace { color: var(--primary-text); }
+
+/* WIDER CONTAINER FOR CONSULTA */
+.container-wide {
+  max-width: 1400px;
+}
+
+/* Lock body scrolling ONLY when viewing the consulta page on desktop */
+@media screen and (min-width: 969px) {
+  body:has(app-consulta) {
+    overflow: hidden;
+    height: 100vh;
+  }
+}
+
+/* Botão Primário no Tema Claro */
+.light-theme .btn-primary,
+.light-theme a.btn-primary,
+.light-theme button.btn-primary,
+body.light-theme .btn-primary,
+body.light-theme a.btn-primary,
+body.light-theme button.btn-primary {
+  color: #FFFFFF !important;
+}
+
+.light-theme .btn-primary:hover,
+.light-theme a.btn-primary:hover,
+.light-theme button.btn-primary:hover,
+body.light-theme .btn-primary:hover,
+body.light-theme a.btn-primary:hover,
+body.light-theme button.btn-primary:hover {
+  color: #FFFFFF !important;
+}
+
+.light-theme .btn-primary i,
+.light-theme a.btn-primary i,
+.light-theme button.btn-primary i,
+body.light-theme .btn-primary i,
+body.light-theme a.btn-primary i,
+body.light-theme button.btn-primary i {
+  color: rgba(255, 255, 255, 0.8);
+}

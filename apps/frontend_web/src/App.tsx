@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { Header } from './components/Header';
-import { UploadSection } from './components/UploadSection';
-import { Dashboard } from './components/Dashboard';
+import { HomePage } from './pages/HomePage';
+import { TerminalPage } from './pages/TerminalPage';
+import { WindowsPage } from './pages/WindowsPage';
+import { ApiDocsPage } from './pages/ApiDocsPage';
 import { SettingsModal } from './components/SettingsModal';
 import { ExampleContractsModal } from './components/ExampleContractsModal';
 import { ContractAnalysisResponse, AppAIState, AIProviderConfig } from './types/contract';
@@ -29,6 +32,29 @@ const DEFAULT_AI_STATE: AppAIState = {
 };
 
 export const App: React.FC = () => {
+  const navigate = useNavigate();
+
+  // Estado do Tema (Dark vs Light)
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    const saved = localStorage.getItem('panda_theme');
+    if (saved) return saved === 'dark';
+    return true; // Padrão: dark theme estilo OpenCNPJ/Linear
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isDark) {
+      root.classList.add('dark-theme');
+      root.classList.remove('light-theme');
+      localStorage.setItem('panda_theme', 'dark');
+    } else {
+      root.classList.add('light-theme');
+      root.classList.remove('dark-theme');
+      localStorage.setItem('panda_theme', 'light');
+    }
+  }, [isDark]);
+
+  // Estado de IA
   const [aiState, setAiState] = useState<AppAIState>(() => {
     const saved = localStorage.getItem('condinome_panda_ai_state_v2');
     if (saved) {
@@ -102,48 +128,33 @@ export const App: React.FC = () => {
 
   const handleSelectExample = (text: string, role: string) => {
     setAiState((prev) => ({ ...prev, user_role: role }));
+    navigate('/');
     handleAnalyzeText(text);
   };
 
-  const handleUpdateActiveProvider = (provider: 'gemini' | 'ollama' | 'openai') => {
-    setAiState((prev) => ({ ...prev, activeProvider: provider }));
-  };
-
-  const handleUpdateSelectedModel = (model: string) => {
-    setAiState((prev) => ({
-      ...prev,
-      [prev.activeProvider]: {
-        ...prev[prev.activeProvider],
-        selectedModel: model,
-      },
-    }));
-  };
-
-  const handleUpdateUserRole = (role: string) => {
-    setAiState((prev) => ({ ...prev, user_role: role }));
-  };
-
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 selection:bg-emerald-100 selection:text-emerald-900">
-      {/* Header Fixo */}
+    <div className="min-h-screen flex flex-col bg-main text-primary-text selection:bg-accent/20 selection:text-accent transition-colors duration-200">
+      {/* Header com Navegação e Modos */}
       <Header
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenExamples={() => setIsExamplesOpen(true)}
+        isDark={isDark}
+        onToggleTheme={() => setIsDark(!isDark)}
         serverOnline={serverOnline}
       />
 
-      {/* Alerta de Erro se houver */}
+      {/* Alerta de Erro */}
       {errorMessage && (
-        <div className="max-w-4xl mx-auto px-4 mt-6 w-full animate-fade-in">
-          <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm font-medium flex items-start gap-3 shadow-sm">
-            <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+        <div className="max-w-4xl mx-auto px-4 mt-6 w-full animate-fade-in z-30">
+          <div className="p-4 rounded-xl bg-rose-950/60 border border-rose-500/50 text-rose-200 text-xs sm:text-sm font-medium flex items-start gap-3 shadow-lg">
+            <AlertCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
             <div className="flex-1">
-              <span className="font-bold block text-rose-900">Não foi possível auditar o contrato:</span>
+              <span className="font-bold block text-rose-300">Falha na auditoria:</span>
               <p className="mt-0.5">{errorMessage}</p>
             </div>
             <button
               onClick={() => setErrorMessage(null)}
-              className="text-rose-500 hover:text-rose-700 font-bold text-xs"
+              className="text-rose-400 hover:text-rose-200 font-bold text-xs"
             >
               Fechar
             </button>
@@ -151,41 +162,56 @@ export const App: React.FC = () => {
         </div>
       )}
 
-      {/* Conteúdo Central */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-8 sm:py-12">
-        {analysis ? (
-          <Dashboard
-            analysis={analysis}
-            onReset={() => {
-              setAnalysis(null);
-              setErrorMessage(null);
-            }}
+      {/* Rotas */}
+      <main className="flex-1 w-full">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <HomePage
+                aiState={aiState}
+                onUpdateActiveProvider={(p) => setAiState((prev) => ({ ...prev, activeProvider: p }))}
+                onUpdateSelectedModel={(m) =>
+                  setAiState((prev) => ({
+                    ...prev,
+                    [prev.activeProvider]: {
+                      ...prev[prev.activeProvider],
+                      selectedModel: m,
+                    },
+                  }))
+                }
+                onUpdateUserRole={(r) => setAiState((prev) => ({ ...prev, user_role: r }))}
+                onOpenSettings={() => setIsSettingsOpen(true)}
+                onAnalyzeFile={handleAnalyzeFile}
+                onAnalyzeText={handleAnalyzeText}
+                analysis={analysis}
+                isLoading={isLoading}
+                onReset={() => {
+                  setAnalysis(null);
+                  setErrorMessage(null);
+                }}
+              />
+            }
           />
-        ) : (
-          <UploadSection
-            onAnalyzeFile={handleAnalyzeFile}
-            onAnalyzeText={handleAnalyzeText}
-            isLoading={isLoading}
-            aiState={aiState}
-            onUpdateActiveProvider={handleUpdateActiveProvider}
-            onUpdateSelectedModel={handleUpdateSelectedModel}
-            onUpdateUserRole={handleUpdateUserRole}
-            onOpenSettings={() => setIsSettingsOpen(true)}
-          />
-        )}
+          <Route path="/terminal" element={<TerminalPage aiState={aiState} />} />
+          <Route path="/linux" element={<TerminalPage aiState={aiState} />} />
+          <Route path="/windows" element={<WindowsPage aiState={aiState} />} />
+          <Route path="/api" element={<ApiDocsPage />} />
+          <Route path="/docs" element={<ApiDocsPage />} />
+        </Routes>
       </main>
 
-      {/* Rodapé Institucional */}
-      <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500">
-        <p className="font-medium text-slate-700">
-          🐼 Condinome Panda • Desenvolvido por <strong>Daniel Douglas Melo Gomes Neto</strong> & <strong>Lucas Pereira Brito</strong>
+      {/* Rodapé Institucional Minimalista */}
+      <footer className="border-t border-border-custom bg-card/40 py-6 text-center text-xs text-secondary-text">
+        <p className="font-semibold text-primary-text">
+          🐼 Condinome Panda • Integrantes: <strong>Daniel Douglas Melo Gomes Neto</strong> & <strong>Lucas Pereira Brito</strong>
         </p>
-        <p className="mt-1 text-[11px] text-slate-400">
-          Ferramenta assistiva sem valor de consultoria jurídica formal. Em caso de dúvidas graves, consulte a Defensoria Pública.
+        <p className="mt-1 text-[11px] text-secondary-text/80">
+          Ferramenta assistiva sem valor de consultoria formal. Criado para democratizar o acesso à justiça no Hackathon.
         </p>
       </footer>
 
-      {/* Modais */}
+      {/* Modais Globais */}
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}

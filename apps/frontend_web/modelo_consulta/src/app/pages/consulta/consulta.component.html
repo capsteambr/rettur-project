@@ -1,0 +1,415 @@
+<main class="consulta-page">
+  <!-- Feedback Toast Notification -->
+  @if (copyFeedback(); as feedback) {
+    <div class="feedback-toast" role="alert">
+      <i class="fas fa-check-circle"></i>
+      <span>{{ feedback }}</span>
+    </div>
+  }
+
+  <!-- Search Header Section (Sempre Compacto) -->
+  
+
+  <!-- Content Results Section -->
+  <section class="results-section">
+    <div class="container-fluid-root">
+
+      <!-- Loading State -->
+      @if (isLoading()) {
+        <div class="loading-state centered-content">
+          <div class="spinner-pulse">
+            <i class="fas fa-circle-notch fa-spin"></i>
+          </div>
+          <h3>Consultando base de dados pública...</h3>
+          <p>Buscando situação cadastral, quadro societário e CNAEs na Receita Federal.</p>
+        </div>
+      }
+
+      <!-- Error State -->
+      @if (!isLoading() && errorMessage(); as error) {
+        <div class="error-card">
+          <div class="error-icon">
+            <i class="fas fa-triangle-exclamation"></i>
+          </div>
+          <div class="error-content">
+            <h3>Não foi possível concluir a consulta</h3>
+            <p>{{ error }}</p>
+            <div class="error-actions">
+              <button type="button" class="btn btn-secondary" (click)="clearSearch()">
+                <i class="fas fa-rotate-left"></i> Nova Pesquisa
+              </button>
+              <button type="button" class="btn btn-primary" (click)="selectPreset('00000000000191')">
+                <i class="fas fa-building-columns"></i> Testar com Banco do Brasil
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+
+
+      <!-- Real Company Data Card -->
+      @if (!isLoading() && companyData(); as company) {
+        <div class="company-record-wrapper">
+
+                              <!-- Printable / Visual Company Sheet -->
+          
+          <!-- Restored Breadcrumb OUTSIDE the modal -->
+          <div class="page-top-actions no-print" style="margin-bottom: 0.5rem; padding: 0 1rem;">
+            <div class="breadcrumb-nav company-breadcrumb">
+              <a routerLink="/"><i class="fas fa-home"></i> Início</a>
+              <i class="fas fa-chevron-right separator"></i>
+              <span class="current breadcrumb-cnpj-copy">
+                {{ cnpjService.formatCnpj(company.cnpj) }}
+                <button type="button" class="btn-copy-breadcrumb" (click)="copyToClipboard(cnpjService.formatCnpj(company.cnpj), 'CNPJ Copiado!')" title="Copiar CNPJ">
+                  <i class="fas fa-copy"></i>
+                </button>
+              </span>
+            </div>
+            <!-- Terminal Switcher Moved to Top Right -->
+            <div class="page-top-actions-right-side">
+              <div class="ext-menu-container desktop-only">
+                <button class="ext-menu-btn" (click)="toggleExtMenu()">
+                  <i class="fas fa-bolt"></i> Quer mais agilidade nas consultas? <i class="fas fa-chevron-down" style="font-size: 0.7em; margin-left: 4px;"></i>
+                </button>
+                @if (isExtMenuOpen()) {
+                  <div class="ext-menu-dropdown">
+                    <a href="https://opencnpj.com/downloads/OpenCNPJ/Extensao" target="_blank" class="ext-menu-item">
+                      <i class="fas fa-puzzle-piece"></i> Baixe a nossa extensão para consultar em qualquer site
+                    </a>
+                  </div>
+                }
+              </div>
+              
+              <div class="platforms-icon-strip desktop-only">
+                <span class="platform-icon-btn active" title="Ficha Padrão"><i class="fas fa-file-invoice"></i></span>
+                <a [routerLink]="getActiveCnpj() ? ['/terminal', getActiveCnpj()] : ['/terminal']" class="platform-icon-btn" title="Linux"><i class="fab fa-linux"></i></a>
+                <a [routerLink]="getActiveCnpj() ? ['/windows', getActiveCnpj()] : ['/windows']" class="platform-icon-btn" title="Windows"><i class="fab fa-windows"></i></a>
+              </div>
+            </div>
+          </div>
+          <article class="company-sheet no-page-scroll-container">
+            <!-- Cabeçalho Exclusivo para Impressão -->
+            <div class="print-brand-header print-only">
+              <div class="print-logo-row">
+                <img src="assets/opencnpj_logo.png" alt="OpenCNPJ Logo" class="print-logo">
+                <div class="print-brand-text">
+                  <h2>OpenCNPJ</h2>
+                  <p>Comprovante de Consulta Cadastral</p>
+                </div>
+              </div>
+              <div class="print-meta-info">
+                <span>Data da Emissão: {{ printDate }}</span>
+                <span>Fonte: Receita Federal do Brasil via OpenCNPJ</span>
+              </div>
+            </div>
+
+            <!-- Sheet Body - Dashboard Layout -->
+            <div class="sheet-body dashboard-layout container-fluid">
+              
+              
+              
+              <div class="dashboard-grid full-height-grid">
+                
+                <!-- Coluna Esquerda: Informações Principais e CNAEs -->
+                <div class="dash-col-left full-height-col">
+                  
+                  <!-- Card 1: Informações Principais -->
+                  <div class="dash-card card-basic-info stretch-card">
+                    <div class="dash-card-header main-company-header">
+                      <div class="header-title-actions-row">
+                        <h2 class="company-razao-social">{{ company.razaoSocial }}</h2>
+                        
+                        <!-- AÇÕES MOVIDAS PARA CA PARA POUPAR ESPAÇO -->
+                        
+                        <!-- Grouping actions to maintain space-between layout -->
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                          <!-- Mobile Kebab Menu -->
+                          <div class="mobile-menu-container no-print">
+                            <button type="button" class="btn-kebab-menu" (click)="toggleMobileMenu()" aria-label="Menu de ações">
+                              <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            
+                            @if (isMobileMenuOpen()) {
+                              <div class="floating-mobile-menu">
+                                <button type="button" class="menu-item-btn" (click)="shareLink(); toggleMobileMenu()">
+                                  <i class="fas fa-share-nodes"></i> Compartilhar
+                                </button>
+                                <button type="button" class="menu-item-btn" (click)="copyFullRecord(); toggleMobileMenu()">
+                                  <i class="fas fa-copy"></i> Copiar Resumo
+                                </button>
+                                <button type="button" class="menu-item-btn" (click)="printSheet(); toggleMobileMenu()">
+                                  <i class="fas fa-print"></i> Imprimir Ficha
+                                </button>
+                              </div>
+                            }
+                          </div>
+                          
+                          <div class="top-actions-right no-print desktop-actions-only">
+                            <button type="button" class="action-btn" (click)="shareLink()" title="Compartilhar" aria-label="Compartilhar Link">
+                              <i class="fas fa-share-nodes"></i>
+                            </button>
+                            <button type="button" class="action-btn" (click)="copyFullRecord()" title="Copiar resumo" aria-label="Copiar resumo">
+                              <i class="fas fa-copy"></i>
+                            </button>
+                            <button type="button" class="action-btn" (click)="printSheet()" title="Imprimir" aria-label="Imprimir">
+                              <i class="fas fa-print"></i>
+                            </button>
+                            <button type="button" class="action-btn" (click)="toggleGeneralInfo()" title="Expandir/Recolher" aria-label="Expandir/Recolher">
+                              <i class="fas" [class.fa-chevron-up]="isGeneralInfoExpanded()" [class.fa-chevron-down]="!isGeneralInfoExpanded()"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="badges-row">
+                        <span class="status-pill status-{{ company.situacaoCadastral?.toLowerCase() || 'ativa' }}">
+                          @if (company.situacaoCadastral?.toLowerCase() === 'ativa') {
+                            <i class="fas fa-check-circle"></i>
+                          } @else if (company.situacaoCadastral?.toLowerCase() === 'baixada') {
+                            <i class="fas fa-times-circle"></i>
+                          } @else {
+                            <i class="fas fa-exclamation-circle"></i>
+                          }
+                          {{ company.situacaoCadastral || 'Ativa' }}
+                        </span>
+                        <span class="type-pill">
+                          <i class="fas fa-calendar-alt"></i> {{ company.dataInicioAtividades || 'Não informada' }}
+                        </span>
+                        <span class="type-pill">
+                          <i class="fas fa-building"></i> {{ company.matriz === true ? 'MATRIZ' : (company.matriz === false ? 'FILIAL' : 'NÃO INFORMADO') }}
+                        </span>
+                        @if (company.opcaoSimples) {
+                          <span class="type-pill">
+                            <i class="fas fa-file-invoice-dollar"></i> Simples Nacional: {{ $any(company.opcaoSimples) === true || company.opcaoSimples === 'S' || company.opcaoSimples === 'Sim' || company.opcaoSimples === 'optante' ? 'Optante' : ($any(company.opcaoSimples) === false || company.opcaoSimples === 'N' || company.opcaoSimples === 'Não' || company.opcaoSimples === 'nao_optante' ? 'Não Optante' : company.opcaoSimples) }}
+                          </span>
+                        }
+                      </div>
+
+                    </div>
+                    @if (isGeneralInfoExpanded()) {
+                      <div class="dash-card-body split-card-body scrollable-card-body">
+                        <!-- Lado Esquerdo: Dados Cadastrais -->
+                      <div class="basic-info-group">
+                        <!-- Natureza Juridica -->
+                        @if (company.naturezaJuridica) {
+                          <div class="dash-info-item" title="Natureza Jurídica: {{ company.naturezaJuridica }}">
+                            <i class="fas fa-scale-balanced"></i>
+                            <div class="copyable-row">
+                              <strong>{{ company.naturezaJuridica }}</strong>
+                              <button type="button" class="btn-micro-copy" (click)="copyToClipboard(company.naturezaJuridica, 'Natureza Jurídica copiada!')" title="Copiar"><i class="fas fa-copy"></i></button>
+                            </div>
+                          </div>
+                        }
+                        <!-- Capital Social -->
+                        @if (company.capitalSocial) {
+                          <div class="dash-info-item" title="Capital Social: {{ cnpjService.formatCurrency(company.capitalSocial) }}">
+                            <i class="fas fa-money-bill-wave"></i> 
+                            <div class="copyable-row">
+                              <strong>{{ cnpjService.formatCurrency(company.capitalSocial) }}</strong>
+                              <button type="button" class="btn-micro-copy" (click)="copyToClipboard(cnpjService.formatCurrency(company.capitalSocial), 'Capital Social copiado!')" title="Copiar"><i class="fas fa-copy"></i></button>
+                            </div>
+                          </div>
+                        }
+                        <!-- Motivo da Situação -->
+                        <div class="dash-info-item" title="Situação: {{ company.motivoSituacaoCadastral || 'SEM MOTIVO' }} (Desde {{ company.dataSituacaoCadastral || 'Não informada' }})">
+                          <i class="fas fa-info-circle"></i> 
+                          <div class="copyable-row">
+                            <strong>{{ company.motivoSituacaoCadastral || 'SEM MOTIVO' }} ({{ company.dataSituacaoCadastral || 'Data não informada' }})</strong>
+                            <button type="button" class="btn-micro-copy" (click)="copyToClipboard((company.motivoSituacaoCadastral || 'SEM MOTIVO') + ' (' + (company.dataSituacaoCadastral || '') + ')', 'Situação copiada!')" title="Copiar"><i class="fas fa-copy"></i></button>
+                          </div>
+                        </div>
+                        <!-- Nome Fantasia -->
+                        @if (company.nomeFantasia) {
+                          <div class="dash-info-item" title="Nome Fantasia: {{ company.nomeFantasia }}">
+                            <i class="fas fa-store"></i> 
+                            <div class="copyable-row">
+                              <strong>{{ company.nomeFantasia }}</strong>
+                              <button type="button" class="btn-micro-copy" (click)="copyToClipboard(company.nomeFantasia, 'Nome Fantasia copiado!')" title="Copiar"><i class="fas fa-copy"></i></button>
+                            </div>
+                          </div>
+                        }
+                        <!-- E-mail -->
+                        @if (company.email) {
+                          <div class="dash-info-item" title="E-mail: {{ company.email }}">
+                            <i class="fas fa-envelope"></i> 
+                            <div class="copyable-row">
+                              <strong><a [href]="'mailto:' + company.email">{{ company.email }}</a></strong>
+                              <button type="button" class="btn-micro-copy" (click)="copyToClipboard(company.email, 'E-mail copiado!')" title="Copiar"><i class="fas fa-copy"></i></button>
+                            </div>
+                          </div>
+                        }
+                        <!-- Telefone -->
+                        @if (company.telefone) {
+                          <div class="dash-info-item" title="Telefone: {{ company.telefone }}">
+                            <i class="fas fa-phone"></i> 
+                            <div class="copyable-row">
+                              <strong><a [href]="'tel:' + cnpjService.cleanCnpj(company.telefone)">{{ company.telefone }}</a></strong>
+                              <button type="button" class="btn-micro-copy" (click)="copyToClipboard(company.telefone, 'Telefone copiado!')" title="Copiar"><i class="fas fa-copy"></i></button>
+                            </div>
+                          </div>
+                        }
+                      </div>
+
+                      <div class="minimal-divider"></div>
+
+                      <!-- Lado Direito: Endereço Detalhado -->
+                      <div class="address-info-group">
+                        @if (company.logradouro) {
+                          <div class="dash-info-item" title="Logradouro">
+                            <i class="fas fa-road"></i> 
+                            <div class="copyable-row">
+                              <strong>{{ company.logradouro }}{{ company.numero ? ', nº ' + company.numero : '' }}</strong>
+                              <button type="button" class="btn-micro-copy" (click)="copyToClipboard(company.logradouro + (company.numero ? ', nº ' + company.numero : ''), 'Logradouro copiado!')" title="Copiar"><i class="fas fa-copy"></i></button>
+                            </div>
+                          </div>
+                        }
+                        @if (company.complemento) {
+                          <div class="dash-info-item" title="Complemento">
+                            <i class="fas fa-door-open"></i> 
+                            <div class="copyable-row">
+                              <strong>{{ company.complemento }}</strong>
+                              <button type="button" class="btn-micro-copy" (click)="copyToClipboard(company.complemento, 'Complemento copiado!')" title="Copiar"><i class="fas fa-copy"></i></button>
+                            </div>
+                          </div>
+                        }
+                        @if (company.bairro) {
+                          <div class="dash-info-item" title="Bairro">
+                            <i class="fas fa-map-pin"></i> 
+                            <div class="copyable-row">
+                              <strong>{{ company.bairro }}</strong>
+                              <button type="button" class="btn-micro-copy" (click)="copyToClipboard(company.bairro, 'Bairro copiado!')" title="Copiar"><i class="fas fa-copy"></i></button>
+                            </div>
+                          </div>
+                        }
+                        @if (company.municipio || company.uf) {
+                          <div class="dash-info-item" title="Cidade e Estado">
+                            <i class="fas fa-city"></i> 
+                            <div class="copyable-row">
+                              <strong>{{ company.municipio || '—' }} - {{ company.uf || '—' }}</strong>
+                              <button type="button" class="btn-micro-copy" (click)="copyToClipboard((company.municipio || '') + ' - ' + (company.uf || ''), 'Cidade/Estado copiado!')" title="Copiar"><i class="fas fa-copy"></i></button>
+                            </div>
+                          </div>
+                        }
+                        @if (company.cep) {
+                          <div class="dash-info-item" title="CEP">
+                            <i class="fas fa-envelopes-bulk"></i> 
+                            <div class="copyable-row">
+                              <strong>{{ company.cep }}</strong>
+                              <button type="button" class="btn-micro-copy" (click)="copyToClipboard(company.cep, 'CEP copiado!')" title="Copiar"><i class="fas fa-copy"></i></button>
+                            </div>
+                          </div>
+                        }
+                      </div>
+                    </div>
+                    }
+                  </div>
+
+                  <!-- Card 2: Atividades Econômicas (CNAE) -->
+                  <div class="dash-card card-cnaes flex-shrink-card">
+                    <div class="dash-card-header">
+                      <h3>Atividades Econômicas</h3>
+                      <span class="count-badge"><i class="fas fa-scale-unbalanced"></i> {{ company.cnaes?.length || 0 }}</span>
+                    </div>
+
+                    <div class="dash-card-body p-0 scrollable-card-body">
+                      @if (company.cnaes && company.cnaes.length > 0) {
+                        <div class="cnae-table-wrapper">
+                          <table class="dash-table">
+                            <thead>
+                              <tr>
+                                <th class="w-15">CNAE</th>
+                                <th class="w-15">Tipo</th>
+                                <th>Descrição</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <!-- Principal -->
+                              <tr>
+                                <td class="font-mono font-medium">{{ company.cnaes[0].cnae }}</td>
+                                <td><span class="badge-principal">Principal</span></td>
+                                <td>{{ company.cnaes[0].descricao }}</td>
+                              </tr>
+                              <!-- Secundárias -->
+                              @for (cnae of company.cnaes.slice(1); track cnae.cnae) {
+                                <tr>
+                                  <td class="font-mono">{{ cnae.cnae }}</td>
+                                  <td><span class="badge-secundaria">Secundária</span></td>
+                                  <td>{{ cnae.descricao }}</td>
+                                </tr>
+                              }
+                            </tbody>
+                          </table>
+                        </div>
+                      } @else {
+                        <div class="empty-state-mini p-4">
+                          <i class="fas fa-info-circle"></i> Nenhuma atividade econômica listada.
+                        </div>
+                      }
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- Coluna Direita: Sócios e Extras -->
+                <div class="dash-col-right full-height-col">
+                  
+                  <!-- Card 3: Sócios e Administradores -->
+                  <div class="dash-card card-socios full-height-card">
+                    <div class="dash-card-header">
+                      <h3>Sócios e Administradores</h3>
+                      <span class="count-badge"><i class="fas fa-users"></i> {{ company.socios?.length || 0 }}</span>
+                    </div>
+
+                    <div class="dash-card-body p-0 scrollable-card-body">
+                      @if (company.socios && company.socios.length > 0) {
+                        <div class="socios-list-wrapper">
+                          <div class="dash-list">
+                            @for (socio of company.socios; track socio.nomeSocio + socio.cnpjCpfSocio) {
+                              <div class="dash-list-item">
+                                <h4 class="socio-name">{{ socio.nomeSocio }}</h4>
+                                <div class="socio-meta-grid">
+                                  @if (socio.descricao) {
+                                    <div class="meta-item"><i class="fas fa-file-signature"></i> <strong>{{ socio.descricao }}</strong></div>
+                                  }
+                                  @if (socio.cnpjCpfSocio) {
+                                    <div class="meta-item"><i class="fas fa-id-card"></i> <span>Documento: <strong class="font-mono">{{ socio.cnpjCpfSocio }}</strong></span></div>
+                                  }
+                                  @if (socio.dataEntradaSociedade) {
+                                    <div class="meta-item"><i class="fas fa-calendar-plus"></i> <span>Entrada: <strong>{{ socio.dataEntradaSociedade }}</strong></span></div>
+                                  }
+                                  @if (socio.faixaEtaria) {
+                                    <div class="meta-item"><i class="fas fa-cake-candles"></i> <span>Faixa Etária: <strong>{{ socio.faixaEtaria }}</strong></span></div>
+                                  }
+                                  @if (socio.nomeRepresentante) {
+                                    <div class="meta-item full-row"><i class="fas fa-user-shield"></i> <span>Representante: <strong>{{ socio.nomeRepresentante }}</strong></span></div>
+                                  }
+                                </div>
+                              </div>
+                            }
+                          </div>
+                        </div>
+                      } @else {
+                        <div class="empty-state-mini p-4">
+                          <i class="fas fa-info-circle"></i> Não há registro de sócios ou administradores disponíveis.
+                        </div>
+                      }
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+
+          <div class="legal-disclaimer-consulta">
+              <strong>Aviso:</strong> Os dados apresentados acima foram coletados diretamente de fontes oficiais da Receita Federal do Brasil. Esta consulta não substitui a emissão oficial da Certidão Negativa de Débitos ou do Comprovante de Inscrição e Situação Cadastral emitido pelo portal governamental.
+              
+            </div>
+          </article>
+
+        </div>
+      }
+
+    </div>
+  </section>
+</main>

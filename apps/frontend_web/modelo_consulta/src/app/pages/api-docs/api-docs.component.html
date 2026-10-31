@@ -1,0 +1,512 @@
+<main class="api-docs-page">
+  <div class="container container-docs">
+    <!-- Breadcrumb: Início > Documentação da API -->
+    <nav class="api-breadcrumb" aria-label="Navegação estrutural">
+      <a routerLink="/"><i class="fas fa-home"></i> Início</a>
+      <i class="fas fa-chevron-right separator"></i>
+      <span class="current">Documentação da API</span>
+    </nav>
+
+    <!-- Cabeçalho Principal da API -->
+    <header class="api-header-section">
+      <div class="api-header-top-identity">
+        <div class="api-header-logo-wrap">
+          <img 
+            src="assets/opencnpj_logo.png" 
+            [alt]="selectedApi().title" 
+            class="api-header-brand-img">
+        </div>
+
+        <div class="api-header-identity-content">
+          <div class="api-header-title-row">
+            <h1>{{ selectedApi().title }}</h1>
+            <div class="api-header-badges">
+              <span class="badge-tag badge-success"><i class="fas fa-circle-check"></i> Online</span>
+              <span class="badge-tag badge-accent"><i class="fas fa-bolt"></i> 100% Gratuita</span>
+              <span class="badge-tag badge-neutral"><i class="fas fa-tachometer-alt"></i> {{ selectedApi().rateLimit }}</span>
+              <span class="badge-tag badge-neutral"><i class="fas fa-key"></i> Sem Auth / Livre</span>
+            </div>
+          </div>
+
+          <p class="api-description-text">
+            {{ selectedApi().shortDesc }}
+          </p>
+        </div>
+      </div>
+
+      <div class="api-quick-links">
+        @if (selectedApi().githubUrl; as gitUrl) {
+          <a [href]="gitUrl" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+            <i class="fab fa-github"></i> Repositório GitHub
+          </a>
+        }
+        <a href="https://github.com/opencaramelo/opencnpj" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+          <i class="fas fa-star"></i> Apoiar Projeto
+        </a>
+      </div>
+    </header>
+
+    <!-- Card de Aviso e Identidade do Projeto: Transparência & Segurança -->
+    <div class="identity-notice-card">
+      <div class="notice-head">
+        <div class="notice-icon">
+          <i class="fas fa-shield-halved"></i>
+        </div>
+        <div class="notice-titles">
+          <span class="notice-tag">Transparência &amp; Segurança</span>
+          <h3>Aviso Importante: Sobre o nome "OpenCNPJ"</h3>
+        </div>
+      </div>
+      <div class="notice-body">
+        <p>
+          O nome <strong>OpenCNPJ</strong> é utilizado por diferentes projetos e serviços na internet. 
+          O projeto oficial mantido e operacionalizado pela iniciativa <strong>OpenCaramelo</strong> está 
+          disponível exclusivamente nos canais oficiais abaixo:
+        </p>
+        <div class="official-domains-grid">
+          <a href="https://opencnpj.com" class="official-domain-item" target="_blank" rel="noopener noreferrer">
+            <span class="domain-icon"><i class="fas fa-globe"></i></span>
+            <div class="domain-details">
+              <span class="domain-label">Site Oficial</span>
+              <span class="domain-url">https://opencnpj.com</span>
+            </div>
+            <i class="fas fa-arrow-up-right-from-square domain-arrow"></i>
+          </a>
+
+          <a href="https://kitana.opencnpj.com" class="official-domain-item" target="_blank" rel="noopener noreferrer">
+            <span class="domain-icon"><i class="fas fa-server"></i></span>
+            <div class="domain-details">
+              <span class="domain-label">Endpoint Oficial da API</span>
+              <span class="domain-url">https://kitana.opencnpj.com</span>
+            </div>
+            <i class="fas fa-arrow-up-right-from-square domain-arrow"></i>
+          </a>
+
+          <a href="https://github.com/opencaramelo/opencnpj" class="official-domain-item" target="_blank" rel="noopener noreferrer">
+            <span class="domain-icon"><i class="fab fa-github"></i></span>
+            <div class="domain-details">
+              <span class="domain-label">Repositório Oficial (GitHub)</span>
+              <span class="domain-url">https://github.com/opencaramelo/opencnpj</span>
+            </div>
+            <i class="fas fa-arrow-up-right-from-square domain-arrow"></i>
+          </a>
+
+          <a href="https://opencaramelo.com" class="official-domain-item" target="_blank" rel="noopener noreferrer">
+            <span class="domain-icon"><i class="fas fa-paw"></i></span>
+            <div class="domain-details">
+              <span class="domain-label">Organização Mantenedora</span>
+              <span class="domain-url">https://opencaramelo.com</span>
+            </div>
+            <i class="fas fa-arrow-up-right-from-square domain-arrow"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  
+
+    <!-- Bloco Principal do Endpoint (Expandível / Colapsável) -->
+    <section id="endpoint-section" class="endpoint-block-container" [class.collapsed]="!isEndpointExpanded()">
+      <div class="endpoint-accordion-header" (click)="toggleEndpointExpanded()" role="button" tabindex="0">
+        <div class="endpoint-accordion-left">
+          <span class="method-tag tag-get">{{ selectedApi().method }}</span>
+          <code class="endpoint-accordion-path">{{ selectedApi().endpointPath }}</code>
+          <span class="endpoint-accordion-subtitle">{{ selectedApi().title }}</span>
+        </div>
+        <div class="endpoint-accordion-right">
+          <span class="badge-status-online"><i class="fas fa-circle-check"></i> Online</span>
+          <button 
+            type="button" 
+            class="btn-toggle-endpoint" 
+            [attr.aria-expanded]="isEndpointExpanded()"
+            title="Expandir ou recolher documentação do endpoint">
+            <span>{{ isEndpointExpanded() ? 'Recolher detalhes' : 'Expandir endpoint' }}</span>
+            <i class="fas fa-chevron-down accordion-chevron" [class.rotated]="isEndpointExpanded()"></i>
+          </button>
+        </div>
+      </div>
+
+      @if (isEndpointExpanded()) {
+        <div class="endpoint-accordion-content fade-in">
+          <!-- 1. Endpoint HTTP Card -->
+          <div class="endpoint-card">
+            <span class="endpoint-label">Endpoint HTTP:</span>
+            <div class="endpoint-bar">
+              <span class="endpoint-method">{{ selectedApi().method }}</span>
+              <code class="endpoint-url">{{ getEndpointFullUrl() }}</code>
+              <button 
+                class="btn-copy-endpoint" 
+                [class.btn-copied]="copyStatus()['url']"
+                (click)="copyToClipboard(getEndpointFullUrl(), 'url')" 
+                title="Copiar URL">
+                <i class="fas" [class.fa-copy]="!copyStatus()['url']" [class.fa-check]="copyStatus()['url']"></i>
+                <span>{{ copyStatus()['url'] ? 'Copiado!' : 'Copiar URL' }}</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. Parâmetros da Requisição -->
+          <section class="doc-section inner-section">
+            <div class="section-title-wrap">
+              <h2><i class="fas fa-sliders-h"></i> Parâmetros da Requisição</h2>
+              <p>Valores aceitos no caminho (path) para filtragem e consulta:</p>
+            </div>
+            
+            <div class="table-responsive">
+              <table class="api-table">
+                <thead>
+                  <tr>
+                    <th>Parâmetro</th>
+                    <th>Tipo</th>
+                    <th>Posição</th>
+                    <th>Obrigatório</th>
+                    <th>Descrição e Formatação</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (p of selectedApi().params; track p.name) {
+                    <tr>
+                      <td><code class="param-name">{{ p.name }}</code></td>
+                      <td><span class="badge-type">{{ p.type }}</span></td>
+                      <td><span class="badge-location">{{ p.in }}</span></td>
+                      <td>
+                        @if (p.required) {
+                          <span class="badge-required">Sim</span>
+                        } @else {
+                          <span class="badge-optional">Não</span>
+                        }
+                      </td>
+                      <td>
+                        <div class="param-desc">{{ p.description }}</div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- 3. Console Interativo (Testar GET) -->
+          <section class="doc-section playground-section inner-section">
+            <div class="section-title-wrap">
+              <h2><i class="fas fa-terminal"></i> Console Interativo (Testar GET)</h2>
+              <p>Realize requisições HTTP GET ao vivo e veja os tempos de resposta e o payload retornado:</p>
+            </div>
+
+            <div class="playground-card">
+              <div class="playground-controls">
+                <div class="playground-controls-top">
+                  <label class="playground-input-label">
+                    <i class="fas fa-terminal"></i> Parâmetro de Consulta:
+                  </label>
+                  <span class="playground-keyboard-tip">
+                    <i class="fas fa-keyboard"></i> Pressione <kbd>Enter</kbd> para enviar
+                  </span>
+                </div>
+
+                <div class="playground-input-group">
+                  <span class="playground-method-badge tag-get">GET</span>
+                  <span class="playground-prefix">{{ getPathPrefix() }}</span>
+                  <input 
+                    type="text" 
+                    class="playground-input" 
+                    [ngModel]="playgroundParamValue()" 
+                    (ngModelChange)="playgroundParamValue.set($event)"
+                    (keydown.enter)="runLiveTest()"
+                    autocomplete="off" 
+                    spellcheck="false"
+                    placeholder="Informe o valor do parâmetro...">
+                  <button 
+                    class="btn btn-primary btn-run-test" 
+                    [disabled]="isTesting()" 
+                    (click)="runLiveTest()">
+                    @if (isTesting()) {
+                      <i class="fas fa-circle-notch fa-spin"></i> <span>Consultando...</span>
+                    } @else {
+                      <i class="fas fa-paper-plane"></i> <span>Enviar Requisição</span>
+                    }
+                  </button>
+                </div>
+
+                @if (selectedApi().params[0].examples; as examples) {
+                  <div class="playground-presets-row">
+                    <span class="preset-label"><i class="fas fa-bolt"></i> Exemplos prontos:</span>
+                    <div class="preset-chips">
+                      @for (ex of examples; track ex.value) {
+                        <button type="button" class="btn-preset" (click)="applyPreset(ex.value)">
+                          {{ ex.label }}
+                        </button>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+
+              <!-- Carregamento Esqueleto (Skeleton Loading durante a requisição) -->
+              @if (isTesting()) {
+                <div class="playground-results skeleton-results-wrap fade-in">
+                  <div class="results-header skeleton-results-header">
+                    <div class="results-meta">
+                      <span class="skeleton-shimmer skeleton-badge-status"></span>
+                      <span class="skeleton-shimmer skeleton-badge-pill"></span>
+                      <span class="skeleton-shimmer skeleton-badge-pill-sm"></span>
+                    </div>
+                    <div class="skeleton-shimmer skeleton-btn-copy"></div>
+                  </div>
+
+                  <div class="response-body-wrap skeleton-body-wrap">
+                    <div class="skeleton-code-lines">
+                      <div class="skeleton-shimmer skeleton-line w-15"></div>
+                      <div class="skeleton-shimmer skeleton-line w-40 indent-1"></div>
+                      <div class="skeleton-shimmer skeleton-line w-70 indent-2"></div>
+                      <div class="skeleton-shimmer skeleton-line w-55 indent-2"></div>
+                      <div class="skeleton-shimmer skeleton-line w-80 indent-2"></div>
+                      <div class="skeleton-shimmer skeleton-line w-60 indent-2"></div>
+                      <div class="skeleton-shimmer skeleton-line w-75 indent-2"></div>
+                      <div class="skeleton-shimmer skeleton-line w-35 indent-1"></div>
+                      <div class="skeleton-shimmer skeleton-line w-10"></div>
+                    </div>
+                  </div>
+                </div>
+              } @else {
+                @if (testResult(); as res) {
+                  <!-- Resposta Real Formatada com Estilo Profissional -->
+                  <div class="playground-results fade-in">
+                    <div class="results-header">
+                      <div class="results-meta">
+                        <div class="meta-status-wrap">
+                          <span class="meta-label">Resposta:</span>
+                          <span class="status-pill" [class.status-ok]="res.status === 200" [class.status-error]="res.status !== 200">
+                            <span class="pulse-status-dot" [class.dot-ok]="res.status === 200"></span>
+                            {{ res.statusText }}
+                          </span>
+                        </div>
+                        <div class="meta-chips-wrap">
+                          <span class="meta-chip latency-chip" title="Tempo de resposta">
+                            <i class="fas fa-stopwatch"></i> {{ res.timeMs }} ms
+                          </span>
+                          <span class="meta-chip mime-chip" title="Tipo de mídia retornado">
+                            <i class="fas fa-file-code"></i> application/json
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="results-actions">
+                        <button 
+                          class="btn-copy-code" 
+                          [class.btn-copied]="copyStatus()['json']"
+                          (click)="copyToClipboard(highlightedJson(), 'json')" 
+                          title="Copiar JSON formatado">
+                          <i class="fas" [class.fa-copy]="!copyStatus()['json']" [class.fa-check]="copyStatus()['json']"></i>
+                          <span>{{ copyStatus()['json'] ? 'Copiado!' : 'Copiar JSON' }}</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    @if (res.note) {
+                      <p class="response-note-alert">{{ res.note }}</p>
+                    }
+
+                    <div class="response-body-wrap">
+                      <div class="response-terminal-bar">
+                        <div class="terminal-dots">
+                          <span class="dot dot-red"></span>
+                          <span class="dot dot-yellow"></span>
+                          <span class="dot dot-green"></span>
+                        </div>
+                        <span class="terminal-bar-title"><i class="fas fa-brackets-curly"></i> Payload de Resposta (JSON)</span>
+                        <span class="terminal-bar-badge">{{ res.status === 200 ? 'Sucesso' : 'Erro' }}</span>
+                      </div>
+                      <pre class="code-block response-code-block"><code [innerHTML]="highlightedJson()"></code></pre>
+                    </div>
+                  </div>
+                }
+              }
+            </div>
+          </section>
+
+          <!-- 4. Estrutura do Payload (Campos de Retorno) -->
+          <section class="doc-section inner-section">
+            <div class="section-title-wrap">
+              <h2><i class="fas fa-file-invoice"></i> Estrutura do Payload (Campos de Retorno)</h2>
+              <p>Descrição detalhada dos campos contidos no objeto <code>data</code> retornado pela API:</p>
+            </div>
+
+            <div class="table-responsive">
+              <table class="api-table">
+                <thead>
+                  <tr>
+                    <th>Campo</th>
+                    <th>Tipo de Dado</th>
+                    <th>Significado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (doc of selectedApi().payloadDocs; track doc.field) {
+                    <tr>
+                      <td><code class="param-name">{{ doc.field }}</code></td>
+                      <td><span class="badge-type">{{ doc.type }}</span></td>
+                      <td><span class="param-desc">{{ doc.desc }}</span></td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- 5. Exemplos de Integração -->
+          <section class="doc-section inner-section">
+            <div class="section-title-wrap">
+              <h2><i class="fas fa-code"></i> Exemplos de Integração</h2>
+              <p>Copie o trecho de código pronto e execute na sua aplicação:</p>
+            </div>
+
+            <div class="snippets-container">
+              <div class="snippet-tabs-header">
+                <div class="snippet-tabs">
+                  <button 
+                    class="snippet-tab-btn" 
+                    [class.active]="activeSnippetTab() === 'curl'" 
+                    (click)="activeSnippetTab.set('curl')">
+                    <i class="fas fa-terminal"></i> cURL
+                  </button>
+                  <button 
+                    class="snippet-tab-btn" 
+                    [class.active]="activeSnippetTab() === 'js'" 
+                    (click)="activeSnippetTab.set('js')">
+                    <i class="fab fa-js"></i> JavaScript (Fetch)
+                  </button>
+                  <button 
+                    class="snippet-tab-btn" 
+                    [class.active]="activeSnippetTab() === 'python'" 
+                    (click)="activeSnippetTab.set('python')">
+                    <i class="fab fa-python"></i> Python (Requests)
+                  </button>
+                </div>
+                <button 
+                  class="btn-copy-code" 
+                  [class.btn-copied]="copyStatus()['snippet']"
+                  (click)="copyToClipboard(currentSnippetCode(), 'snippet')" 
+                  title="Copiar código">
+                  <i class="fas" [class.fa-copy]="!copyStatus()['snippet']" [class.fa-check]="copyStatus()['snippet']"></i>
+                  <span>{{ copyStatus()['snippet'] ? 'Copiado!' : 'Copiar Código' }}</span>
+                </button>
+              </div>
+              <pre class="code-block snippet-code-block"><code>{{ currentSnippetCode() }}</code></pre>
+            </div>
+          </section>
+        </div>
+      }
+    </section>
+
+    <!-- 6. Códigos de Resposta HTTP -->
+    <section class="doc-section status-codes-section">
+      <div class="section-title-wrap">
+        <h2><i class="fas fa-traffic-light"></i> Códigos de Resposta HTTP</h2>
+        <p>Padrões de retorno da API</p>
+      </div>
+
+      <div class="table-responsive">
+        <table class="api-table status-table">
+          <thead>
+            <tr>
+              <th>Código HTTP</th>
+              <th>Status</th>
+              <th>Significado e Tratamento Recomendado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="http-status-badge status-200">200 OK</span></td>
+              <td><strong>Sucesso</strong></td>
+              <td>CNPJ localizado e dados cadastrais retornados com sucesso no payload.</td>
+            </tr>
+            <tr>
+              <td><span class="http-status-badge status-400">400 Bad Request</span></td>
+              <td><strong>Requisição Inválida</strong></td>
+              <td>O CNPJ informado possui quantidade incorreta de dígitos ou caracteres incompatíveis.</td>
+            </tr>
+            <tr>
+              <td><span class="http-status-badge status-404">404 Not Found</span></td>
+              <td><strong>Não Encontrado</strong></td>
+              <td>O CNPJ não está cadastrado ou não foi localizado nas bases oficiais da Receita Federal.</td>
+            </tr>
+            <tr>
+              <td><span class="http-status-badge status-429">429 Too Many Requests</span></td>
+              <td><strong>Rate Limit Excedido</strong></td>
+              <td>O limite de 300 requisições por minuto por IP foi ultrapassado. Aguarde alguns instantes antes de reenviar.</td>
+            </tr>
+            <tr>
+              <td><span class="http-status-badge status-500">500 / 503 Internal Error</span></td>
+              <td><strong>Erro Interno / Instabilidade</strong></td>
+              <td>Instabilidade temporária nos serviços de dados governamentais. Tente novamente em instantes.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 7. Rate Limit & Boas Práticas -->
+    <section class="doc-section rate-limit-section">
+      <div class="section-title-wrap">
+        <h2><i class="fas fa-gauge-high"></i> Rate Limit &amp; Boas Práticas</h2>
+        <p>Orientações para consumo escalável, responsável e de alta performance</p>
+      </div>
+
+      <div class="best-practices-grid">
+        <div class="practice-box">
+          <div class="practice-icon"><i class="fas fa-database"></i></div>
+          <h4>Armazenamento em Cache Local</h4>
+          <p>
+            Recomendamos salvar em banco de dados local ou cache (Redis/Memcached) os dados de empresas 
+            já consultadas. A ficha de um CNPJ raramente sofre alterações diárias.
+          </p>
+        </div>
+
+        <div class="practice-box">
+          <div class="practice-icon"><i class="fas fa-bolt"></i></div>
+          <h4>300 Requisições por Minuto</h4>
+          <p>
+            O limite de 300 req/min equivale a uma média de 5 requisições por segundo por IP, 
+            sendo mais que suficiente para checkout de e-commerces, onboarding e rotinas de ERP.
+          </p>
+        </div>
+
+        <div class="practice-box">
+          <div class="practice-icon"><i class="fas fa-leaf"></i></div>
+          <h4>Uso Sustentável e Responsável</h4>
+          <p>
+            O serviço é gratuito para toda a comunidade. Evite loops não controlados ou varreduras 
+            agressivas em lote para mantermos o projeto 100% aberto e sem cobranças.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Suporte, Dúvidas e GitHub -->
+    <section class="community-support-card">
+      <div class="community-content">
+        <div class="community-icon"><i class="fab fa-github"></i></div>
+        <div class="community-text">
+          <h3>Encontrou algum problema ou tem sugestões?</h3>
+          <p>
+            O <strong>OpenCNPJ</strong> é um projeto colaborativo mantido pelo <strong>OpenCaramelo</strong>. 
+            Sua contribuição é fundamental para mantermos a infraestrutura e a documentação sempre atualizadas.
+          </p>
+        </div>
+      </div>
+      <div class="community-actions">
+        <a href="https://github.com/opencaramelo/opencnpj/issues" target="_blank" rel="noopener noreferrer" class="btn btn-github">
+          <i class="fas fa-circle-exclamation"></i> Abrir uma Issue no GitHub
+        </a>
+        <a href="https://github.com/opencaramelo/opencnpj" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+          <i class="fab fa-github"></i> Ver Código no GitHub
+        </a>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Rodapé padrão ao final da página -->
+  <app-footer></app-footer>
+</main>

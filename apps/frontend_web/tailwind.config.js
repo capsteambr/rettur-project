@@ -4,16 +4,23 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        brand: {
-          50: '#f0fdf4',
-          100: '#dcfce7',
-          500: '#22c55e',
-          600: '#16a34a',
-          700: '#15803d',
-        }
+        'main': 'var(--bg-main)',
+        'card': 'var(--bg-card)',
+        'card-hover': 'var(--bg-card-hover)',
+        'secondary-bg': 'var(--bg-secondary)',
+        'primary-text': 'var(--primary-text)',
+        'secondary-text': 'var(--secondary-text)',
+        'border-custom': 'var(--border-color)',
+        'accent': 'var(--accent-color)',
+        'accent-hover': 'var(--accent-hover)',
+      },
+      fontFamily: {
+        mono: ['"Fira Code"', 'monospace'],
+        sans: ['Inter', 'sans-serif'],
       }
     },
   },

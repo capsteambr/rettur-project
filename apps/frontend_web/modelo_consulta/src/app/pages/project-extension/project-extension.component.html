@@ -1,0 +1,261 @@
+<main class="project-detail-page">
+  <!-- Hero Section -->
+  <section class="project-hero">
+    <div class="container">
+      <!-- Breadcrumb -->
+      <div class="breadcrumb-nav">
+        <a routerLink="/"><i class="fas fa-home"></i> Início</a>
+        <i class="fas fa-chevron-right separator"></i>
+        <span class="current">OpenCNPJ</span>
+      </div>
+
+      <div class="hero-layout">
+        <div class="hero-text-content">
+          <div class="hero-badges-row">
+            <span class="section-tag"><i class="fas fa-puzzle-piece"></i> Extensão para Navegadores</span>
+            <span class="status-badge badge-active"><i class="fas fa-check-circle"></i> Disponível</span>
+          </div>
+
+          <h1>OpenCNPJ Extensão Web</h1>
+          <p class="tagline">
+            Identificação inteligente e popover instantâneo de dados de CNPJ em qualquer site da web, e-commerce ou portal de cotação corporativa.
+          </p>
+
+          <!-- Specs Rápidas -->
+          <div class="quick-specs-grid">
+            
+            
+            <div class="spec-card">
+              <span class="spec-label">Telemetria</span>
+              <span class="spec-val spec-free">Zero Rastreamento</span>
+            </div>
+          </div>
+
+          <!-- Ações Principais de Instalação -->
+          <div class="hero-download-ctas">
+            <a href="https://chromewebstore.google.com/detail/opencnpj-consulta-de-cnpj/fjbdbdnnidjchodfcaebldjfjejijpdc" 
+               (click)="trackDownload('chrome', 'https://chromewebstore.google.com/detail/opencnpj-consulta-de-cnpj/fjbdbdnnidjchodfcaebldjfjejijpdc')"
+               target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-cta-download">
+              <i class="fab fa-chrome"></i> Adicionar ao Google Chrome
+            </a>
+            <a href="https://microsoftedge.microsoft.com/addons/detail/opencnpj-consulta-de-cn/hkmgnadlelpdkjpcdejanjklfnfjlidp" 
+               (click)="trackDownload('edge', 'https://microsoftedge.microsoft.com/addons/detail/opencnpj-consulta-de-cn/hkmgnadlelpdkjpcdejanjklfnfjlidp')"
+               target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+              <i class="fab fa-edge"></i> Adicionar ao Microsoft Edge
+            </a>
+          </div>
+          <p class="download-footnote">
+            <i class="fas fa-lock"></i> 100% de privacidade: a extensão não monitora histórico nem envia dados das páginas navegadas.
+            <span class="footnote-sep">•</span>
+            <a routerLink="/politica-de-privacidade" [queryParams]="{tab: 'extensao'}" class="footnote-link">
+              <i class="fas fa-file-shield"></i> Política de Privacidade
+            </a>
+          </p>
+        </div>
+
+        <!-- Browser Mockup Preview -->
+        <div class="hero-mockup-wrapper">
+          <div class="browser-mockup">
+            <div class="browser-chrome-bar">
+              <div class="browser-dots">
+                <span class="dot dot-red"></span>
+                <span class="dot dot-yellow"></span>
+                <span class="dot dot-green"></span>
+              </div>
+              <div class="browser-address-bar">
+                <i class="fas fa-lock"></i>
+                <span>fornecedor-exemplo.com.br/contato</span>
+              </div>
+              <div class="browser-ext-icon">
+                <i class="fas fa-paw"></i>
+              </div>
+            </div>
+
+            <div class="browser-page-body">
+              <div class="mock-web-text-skeleton">
+                <div class="skeleton-line full"></div>
+                <div class="skeleton-line half"></div>
+              </div>
+
+              <div class="mock-detected-section">
+                <span class="mock-label-lead">Dados do Fornecedor / Faturamento:</span>
+                <div class="mock-detected-text">
+                  Para emissão de NF-e, utilize o nosso CNPJ: 
+                  <span class="mock-cnpj-highlight">
+                    33.000.167/0001-01
+                    <i class="fas fa-arrow-pointer mock-cursor"></i>
+                  </span>
+                </div>
+
+                <!-- Tooltip Popover Flutuante -->
+                <div class="mock-extension-popover">
+                  <div class="popover-header">
+                    <span class="popover-logo"><i class="fas fa-paw"></i> OpenCNPJ</span>
+                    <span class="popover-status">ATIVA</span>
+                  </div>
+                  <div class="popover-title">PETROLEO BRASILEIRO S.A. - PETROBRAS</div>
+                  <div class="popover-meta">
+                    <div>CNPJ: <strong>33.000.167/0001-01</strong></div>
+                    <div>Capital: <strong>R$ 205.431.999.986,00</strong></div>
+                    <div>Local: <strong>Rio de Janeiro / RJ</strong></div>
+                  </div>
+                  <div class="popover-footer">
+                    <span class="popover-btn"><i class="fas fa-copy"></i> Copiar</span>
+                    <a routerLink="/consulta" [queryParams]="{ cnpj: '33000167000101' }" class="popover-btn popover-btn-primary">
+                      <i class="fas fa-external-link-alt"></i> Ficha Completa
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mock-web-text-skeleton">
+                <div class="skeleton-line three-quarter"></div>
+                <div class="skeleton-line full"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Opções de Instalação / Lojas de Extensões -->
+  <section class="download-channels-section">
+    <div class="container">
+      <div class="section-title-area centered-content">
+        <span class="badge-pill"><i class="fas fa-puzzle-piece"></i> Lojas &amp; Instalação</span>
+        <h2>Instale no seu Navegador Favorito</h2>
+        <p>Compatibilidade nativa com Google Chrome e Microsoft Edge:</p>
+      </div>
+
+      <div class="channels-grid">
+        <!-- Google Chrome / Brave / Opera -->
+        <div class="channel-card highlight-channel">
+          <div class="channel-icon icon-chrome">
+            <i class="fab fa-chrome"></i>
+          </div>
+          <div class="channel-content">
+            <div class="channel-header">
+              <h3>Google Chrome &amp; Brave</h3>
+              <span class="tag-status active">Mais Popular</span>
+            </div>
+            <p>Adicione ao Chrome, Brave Browser, Opera ou Vivaldi com atualização contínua e sem necessidade de configurações.</p>
+            <ul class="channel-info-list">
+              <li><i class="fas fa-check"></i> Chrome Web Store oficial</li>
+              <li><i class="fas fa-check"></i> Seguro e Leve</li>
+              <li><i class="fas fa-check"></i> Ativação imediata em 1 clique</li>
+            </ul>
+            <div class="channel-action">
+              <a href="https://chromewebstore.google.com/detail/opencnpj-consulta-de-cnpj/fjbdbdnnidjchodfcaebldjfjejijpdc" 
+                 (click)="trackDownload('chrome', 'https://chromewebstore.google.com/detail/opencnpj-consulta-de-cnpj/fjbdbdnnidjchodfcaebldjfjejijpdc')"
+                 target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                <i class="fab fa-chrome"></i> Adicionar ao Chrome
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Microsoft Edge -->
+        <div class="channel-card">
+          <div class="channel-icon icon-edge">
+            <i class="fab fa-edge"></i>
+          </div>
+          <div class="channel-content">
+            <div class="channel-header">
+              <h3>Microsoft Edge</h3>
+              <span class="tag-status active">Oficial</span>
+            </div>
+            <p>Instalação homologada para ambientes Windows corporativos e usuários do navegador Microsoft Edge.</p>
+            <ul class="channel-info-list">
+              <li><i class="fas fa-check"></i> Microsoft Edge Add-ons</li>
+              <li><i class="fas fa-check"></i> Integração com perfis corporativos</li>
+              <li><i class="fas fa-check"></i> Consumo mínimo de memória</li>
+            </ul>
+            <div class="channel-action">
+              <a href="https://microsoftedge.microsoft.com/addons/detail/opencnpj-consulta-de-cn/hkmgnadlelpdkjpcdejanjklfnfjlidp" 
+                 (click)="trackDownload('edge', 'https://microsoftedge.microsoft.com/addons/detail/opencnpj-consulta-de-cn/hkmgnadlelpdkjpcdejanjklfnfjlidp')"
+                 target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                <i class="fab fa-edge"></i> Adicionar ao Edge
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recursos Principais -->
+  <section class="features-section">
+    <div class="container">
+      <div class="section-title-area centered-content">
+        <span class="badge-pill"><i class="fas fa-wand-magic-sparkles"></i> Produtividade</span>
+        <h2>Recursos da Extensão OpenCNPJ</h2>
+        <p>Projetada para economizar tempo de compras, compliance, faturamento e atendimento diário.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-box">
+          <div class="feature-icon"><i class="fas fa-crosshairs"></i></div>
+          <h3>Detecção Automática no DOM</h3>
+          <p>Varre a página em segundo plano de forma silenciosa e destaca qualquer número válido de CNPJ em qualquer site.</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon"><i class="fas fa-window-restore"></i></div>
+          <h3>Popover Flutuante</h3>
+          <p>Passe o ponteiro do mouse sobre o CNPJ e visualize instantaneamente a Razão Social, Situação Cadastral e Capital.</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon"><i class="fas fa-copy"></i></div>
+          <h3>Cópia Rápida com 1 Toque</h3>
+          <p>Copie o CNPJ sanitizado (somente números) ou formatado (com pontos e barra) diretamente para o seu ERP ou planilha.</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon"><i class="fas fa-arrow-up-right-from-square"></i></div>
+          <h3>Ficha Completa no OpenCNPJ</h3>
+          <p>Clique no atalho do popover para abrir a ficha oficial com todos os sócios e histórico cadastral em nova aba.</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon"><i class="fas fa-user-shield"></i></div>
+          <h3>100% Privado e Anônimo</h3>
+          <p>Nenhuma URL acessada é armazenada ou enviada a servidores externos. A requisição de consulta ocorre sob demanda.</p>
+          <a routerLink="/politica-de-privacidade" [queryParams]="{tab: 'extensao'}" class="feature-doc-link">
+            <i class="fas fa-file-shield"></i> Ler Termos &amp; Política da Extensão &rarr;
+          </a>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon"><i class="fas fa-sliders"></i></div>
+          <h3>Configuração de Comportamento</h3>
+          <p>Escolha se deseja destacar CNPJs automaticamente ou disparar a visualização apenas por clique ou atalho de teclado.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Rodapé de Navegação do Ecossistema -->
+  <section class="project-footer-nav">
+    <div class="container">
+      <div class="footer-nav-box">
+        <div class="nav-back">
+          <a routerLink="/" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Voltar para o Início</a>
+        </div>
+        <div class="nav-center-legal">
+          <a routerLink="/politica-de-privacidade" [queryParams]="{tab: 'extensao'}" class="legal-inline-link">
+            <i class="fas fa-shield-halved"></i> Política de Privacidade da Extensão
+          </a>
+        </div>
+        <div class="nav-next">
+          <span class="next-label">Outra Solução:</span>
+          <a [routerLink]="['/downloads/OpenCNPJ/Mobile']" class="next-project-link">
+            OpenCNPJ Mobile (Android &amp; iOS) <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

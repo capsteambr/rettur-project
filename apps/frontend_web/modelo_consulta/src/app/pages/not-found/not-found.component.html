@@ -1,0 +1,54 @@
+<div class="not-found-page">
+  <div class="container">
+    <div class="not-found-card">
+      <div class="status-badge">
+        <i class="fas fa-triangle-exclamation"></i>
+        <span>Erro 404 • Rota Não Encontrada</span>
+      </div>
+
+      <div class="error-visual">
+        <span class="glitch-number">404</span>
+      </div>
+
+      <h1 class="error-title">Página Não Encontrada</h1>
+
+      <p class="error-desc">
+        A rota solicitada não existe na base de navegação do OpenCNPJ ou foi movida. 
+        Utilize os atalhos abaixo para retornar à página principal ou consultar dados cadastrais.
+      </p>
+
+      <!-- Botões de Ação Rápida -->
+      <div class="error-actions">
+        <a routerLink="/" class="btn btn-primary">
+          <i class="fas fa-magnifying-glass"></i>
+          <span>Consultar CNPJ (Início)</span>
+        </a>
+        <a routerLink="/terminal" class="btn btn-secondary">
+          <i class="fab fa-linux"></i>
+          <span>Terminal Linux</span>
+        </a>
+        <a routerLink="/windows" class="btn btn-secondary">
+          <i class="fab fa-windows"></i>
+          <span>Windows 98</span>
+        </a>
+        
+      </div>
+
+      <!-- Links Sugeridos -->
+      <div class="suggested-links">
+        <span class="suggested-title">Acessos Rápidos</span>
+        <div class="links-row">
+          <a [routerLink]="['/', '00000000000191']">
+            <i class="fas fa-building-columns"></i> Exemplo: Banco do Brasil
+          </a>
+          <a routerLink="/" fragment="donation">
+            <i class="fas fa-mug-hot"></i> Apoiar o Projeto
+          </a>
+          <a href="https://github.com/opencaramelo/opencnpj" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-github"></i> Repositório GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

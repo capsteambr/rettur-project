@@ -1,0 +1,382 @@
+<main class="home-page">
+  <!-- Hero Section com Barra de Consulta Imediata -->
+  <section class="hero hero-unified">
+    <div class="container">
+      <div class="hero-top-info centered-content">
+        <h1>OpenCNPJ</h1>
+        <p class="tagline">
+          A forma mais rápida, gratuita e confiável de integrar <strong>dados cadastrais de CNPJ</strong> em seu sistema. 
+          100% gratuito, sem limites abusivos e sem necessidade de cadastro.
+        </p>
+
+        
+
+      </div>
+      <!-- Barra de Consulta Integrada ao Topo -->
+      <div class="hero-search-card">
+        <!-- Form de Consulta -->
+        <form class="search-form" (ngSubmit)="submitSearch()">
+          <div class="search-input-wrapper">
+            <i class="fas fa-building search-icon"></i>
+            <input 
+              id="home-cnpj-input"
+              type="text" 
+              [ngModel]="cnpjInput()" 
+              (ngModelChange)="onCnpjInputChange($event)" (focus)="onSearchFocus()" (blur)="onSearchBlur()" 
+              name="cnpjSearch" 
+              placeholder="Digite o CNPJ (ex: 00.000.000/0001-91)" 
+              autocomplete="off"
+              maxlength="18"
+              inputmode="numeric"
+              class="search-input"
+              [class.has-error]="hasInputError()"
+              required>
+            @if (cnpjInput()) {
+              <button type="button" class="btn-clear-input" (click)="cnpjInput.set('')" title="Limpar campo">
+                <i class="fas fa-times-circle"></i>
+              </button>
+            }
+          
+            @if (isSearchFocused()) {
+              <div class="home-history-dropdown">
+                <div class="history-dropdown-head">
+                  @if (searchHistory().length > 0) {
+                    <span><i class="fas fa-history"></i> Consultas Recentes</span>
+                    <button type="button" class="btn-clear-dropdown-history" (mousedown)="clearHistory()" title="Limpar histórico">
+                      <i class="fas fa-trash-can"></i> Limpar
+                    </button>
+                  } @else {
+                    <span><i class="fas fa-wand-magic-sparkles"></i> Exemplos Rápidos</span>
+                  }
+                </div>
+                <div class="history-dropdown-list">
+                  @if (searchHistory().length > 0) {
+                    @for (item of searchHistory(); track item.cnpj) {
+                      <button 
+                        type="button" 
+                        class="history-dropdown-item" 
+                        (mousedown)="selectPreset(item.cnpj)">
+                        <div class="dropdown-item-header">
+                          <span class="dropdown-cnpj">{{ cnpjService.formatCnpj(item.cnpj) }}</span>
+                          <span class="dropdown-badge recent-badge"><i class="fas fa-clock-rotate-left"></i> Recente</span>
+                        </div>
+                        @if (item.razaoSocial) {
+                          <span class="dropdown-name">{{ item.razaoSocial }}</span>
+                        }
+                      </button>
+                    }
+                  } @else {
+                    @for (preset of cnpjService.CNPJ_PRESETS; track preset.value) {
+                      <button 
+                        type="button" 
+                        class="history-dropdown-item" 
+                        (mousedown)="selectPreset(preset.value)">
+                        <div class="dropdown-item-header">
+                          <span class="dropdown-cnpj">{{ cnpjService.formatCnpj(preset.value) }}</span>
+                          <span class="dropdown-badge example-badge"><i class="fas fa-sparkles"></i> Exemplo</span>
+                        </div>
+                        <span class="dropdown-name">{{ preset.label }}</span>
+                      </button>
+                    }
+                  }
+                </div>
+              </div>
+            }
+          </div>
+          <button type="submit" class="btn btn-primary btn-search-submit">
+            <i class="fas fa-magnifying-glass"></i><span class="submit-text">Consultar Empresa</span>
+          </button>
+        </form>
+      </div>
+
+    </div>
+    
+    <!-- Faixa de Features movida para fora do container para o absolute bottom funcionar com o Grid CSS -->
+    <div class="hero-features-strip">
+      <div class="strip-item">
+        <i class="fas fa-bolt"></i>
+        <span>Alta performance (latência média &lt; 50ms)</span>
+      </div>
+      <div class="strip-item">
+        <i class="fas fa-lock-open"></i>
+        <span>Sem API Key obrigatória</span>
+      </div>
+      <div class="strip-item">
+        <i class="fas fa-database"></i>
+        <span>Fontes oficiais da Receita Federal</span>
+      </div>
+      <div class="strip-item">
+        <i class="fas fa-circle-check"></i>
+        <span>100% Gratuito</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Seção Pronto para Consultar -->
+  <section class="ready-to-search-section">
+    <div class="container">
+      <div class="initial-empty-state centered-content">
+        <div class="empty-icon-shield">
+          <i class="fas fa-building-circle-check"></i>
+        </div>
+        <h2>Pronto para Consultar</h2>
+        <p class="empty-desc">
+          Informe um número de CNPJ válido acima para ter acesso instantâneo a todos os dados fiscais, endereço oficial, 
+          telefones, quadro societário e CNAEs registrados na Receita Federal.
+        </p>
+
+        <div class="benefits-grid">
+          <div class="benefit-card">
+            <i class="fas fa-bolt-lightning"></i>
+            <h4>Resposta Imediata</h4>
+            <p>Consultas diretas e sem burocracia ou limites arbitrários.</p>
+          </div>
+          <div class="benefit-card">
+            <i class="fas fa-users-viewfinder"></i>
+            <h4>Quadro Societário Completo</h4>
+            <p>Visualize sócios, administradores, cargos e qualificações.</p>
+          </div>
+          <div class="benefit-card">
+            <i class="fas fa-print"></i>
+            <h4>Pronto para Impressão</h4>
+            <p>Gere fichas cadastrais limpas e formatadas para PDF com 1 clique.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Seção Documentação da API REST & Limite de Utilização -->
+  <section id="api-docs" class="api-docs-section">
+    <div class="container">
+      <div class="api-docs-header centered-content">
+        <span class="badge-pill"><i class="fas fa-terminal"></i> API Oficial e Gratuíta</span>
+        <h2>API Pública para Desenvolvedores</h2>
+        <p>
+          O <strong>OpenCNPJ</strong> foi criado para facilitar o acesso de desenvolvedores a dados públicos 
+          de empresas brasileiras, permitindo integração direta em aplicações, ERPs, sistemas de checkout e pesquisas.
+        </p>
+      </div>
+
+      <!-- Card de Alerta e Esclarecimento de Identidade do Projeto -->
+      <div class="identity-notice-card">
+        <div class="notice-head">
+          <div class="notice-icon">
+            <i class="fas fa-shield-halved"></i>
+          </div>
+          <div class="notice-titles">
+            <span class="notice-tag">Transparência &amp; Segurança</span>
+            <h3>Aviso Importante: Sobre o nome "OpenCNPJ"</h3>
+          </div>
+        </div>
+        <div class="notice-body">
+          <p>
+            O nome <strong>OpenCNPJ</strong> é utilizado por diferentes projetos e serviços independentes na internet. 
+            O projeto oficial mantido e sustentado pela iniciativa <strong>OpenCaramelo</strong> opera exclusivamente 
+            sob os domínios e canais oficiais listados abaixo:
+          </p>
+          <div class="official-domains-grid">
+            <a href="https://opencnpj.com" class="official-domain-item" target="_blank" rel="noopener noreferrer">
+              <span class="domain-icon"><i class="fas fa-globe"></i></span>
+              <div class="domain-details">
+                <span class="domain-label">Site Oficial</span>
+                <span class="domain-url">https://opencnpj.com</span>
+              </div>
+              <i class="fas fa-arrow-up-right-from-square domain-arrow"></i>
+            </a>
+
+            <a href="https://kitana.opencnpj.com" class="official-domain-item" target="_blank" rel="noopener noreferrer">
+              <span class="domain-icon"><i class="fas fa-server"></i></span>
+              <div class="domain-details">
+                <span class="domain-label">Endpoint Oficial da API</span>
+                <span class="domain-url">https://kitana.opencnpj.com</span>
+              </div>
+              <i class="fas fa-arrow-up-right-from-square domain-arrow"></i>
+            </a>
+
+            <a href="https://github.com/opencaramelo/opencnpj" class="official-domain-item" target="_blank" rel="noopener noreferrer">
+              <span class="domain-icon"><i class="fab fa-github"></i></span>
+              <div class="domain-details">
+                <span class="domain-label">Repositório Oficial (GitHub)</span>
+                <span class="domain-url">github.com/opencaramelo/opencnpj</span>
+              </div>
+              <i class="fas fa-arrow-up-right-from-square domain-arrow"></i>
+            </a>
+
+            <a href="https://opencaramelo.com" class="official-domain-item" target="_blank" rel="noopener noreferrer">
+              <span class="domain-icon"><i class="fas fa-paw"></i></span>
+              <div class="domain-details">
+                <span class="domain-label">Organização Mantenedora</span>
+                <span class="domain-url">https://opencaramelo.com</span>
+              </div>
+              <i class="fas fa-arrow-up-right-from-square domain-arrow"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid de Destaques: Limite de Requisições, Sem API Key, Formato JSON -->
+      <div class="api-features-grid">
+        <!-- Card: Limite de Requisições -->
+        <div class="api-feature-card featured-limit-card">
+          <div class="feature-card-header">
+            <div class="feature-icon limit-icon">
+              <i class="fas fa-gauge-high"></i>
+            </div>
+            <span class="feature-badge">Rate Limit</span>
+          </div>
+          <h3>Limite de 300 req / min</h3>
+          <p>
+            A API possui atualmente um limite de <strong>300 requisições por minuto</strong> por endereço IP. 
+            Esse limite existe para permitir o uso público e gratuito por toda a comunidade, evitando sobrecarga da infraestrutura e garantindo latência estável.
+          </p>
+        </div>
+
+        <!-- Card: Sem API Key -->
+        <div class="api-feature-card">
+          <div class="feature-card-header">
+            <div class="feature-icon free-icon">
+              <i class="fas fa-unlock-keyhole"></i>
+            </div>
+            <span class="feature-badge">Livre Acesso</span>
+          </div>
+          <h3>Sem API Key ou Cadastro</h3>
+          <p>
+            Acesso imediato sem burocracia. Não exigimos tokens de autenticação, cadastros prévios ou dados de pagamento. Basta enviar uma requisição HTTP GET padrão.
+          </p>
+        </div>
+
+        <!-- Card: JSON Estruturado -->
+        <div class="api-feature-card">
+          <div class="feature-card-header">
+            <div class="feature-icon json-icon">
+              <i class="fas fa-file-code"></i>
+            </div>
+            <span class="feature-badge">Padronização</span>
+          </div>
+          <h3>Resposta em JSON Estruturado</h3>
+          <p>
+            Payload estruturado e limpo em UTF-8 contendo razão social, nome fantasia, CNAEs, situação cadastral e quadro de sócios e administradores (QSA).
+          </p>
+        </div>
+      </div>
+
+   
+
+      <!-- Tabela de Identidade Técnica do Projeto -->
+      <div class="project-identity-table-card">
+        <div class="identity-table-head">
+          <div class="head-icon"><i class="fas fa-id-badge"></i></div>
+          <div>
+            <h3>Identidade do Projeto</h3>
+            <p>Parâmetros consolidados do OpenCNPJ mantido pelo OpenCaramelo</p>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="identity-table">
+            <thead>
+              <tr>
+                <th>Informação</th>
+                <th>Valor / Referência Oficial</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><i class="fas fa-tag"></i> <strong>Nome</strong></td>
+                <td><strong>OpenCNPJ</strong></td>
+              </tr>
+              <tr>
+                <td><i class="fas fa-globe"></i> <strong>Site oficial</strong></td>
+                <td><a href="https://opencnpj.com" target="_blank" rel="noopener noreferrer">https://opencnpj.com</a></td>
+              </tr>
+              <tr>
+                <td><i class="fas fa-paw"></i> <strong>Mantenedor</strong></td>
+                <td><a href="https://opencaramelo.com" target="_blank" rel="noopener noreferrer">OpenCaramelo</a></td>
+              </tr>
+              <tr>
+                <td><i class="fab fa-github"></i> <strong>Repositório oficial</strong></td>
+                <td><a href="https://github.com/opencaramelo/opencnpj" target="_blank" rel="noopener noreferrer">opencaramelo/opencnpj</a></td>
+              </tr>
+              <tr>
+                <td><i class="fas fa-server"></i> <strong>API</strong></td>
+                <td><code>kitana.opencnpj.com</code></td>
+              </tr>
+              <tr>
+                <td><i class="fas fa-shapes"></i> <strong>Tipo</strong></td>
+                <td>API REST pública</td>
+              </tr>
+              <tr>
+                <td><i class="fas fa-hand-holding-dollar"></i> <strong>Custo</strong></td>
+                <td><span class="badge-free">Gratuito</span></td>
+              </tr>
+              <tr>
+                <td><i class="fas fa-gauge-high"></i> <strong>Limite</strong></td>
+                <td><strong>300 req/min</strong></td>
+              </tr>
+              <tr>
+                <td><i class="fas fa-bug"></i> <strong>Problemas e Sugestões</strong></td>
+                <td>
+                  <a href="https://github.com/opencaramelo/opencnpj/issues" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-circle-exclamation"></i> Abrir uma Issue no GitHub
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Seção Aplicativos & Ferramentas (Ecossistema OpenCNPJ) -->
+  <section class="ecosystem-banner-section">
+    <div class="container">
+      <div class="ecosystem-header centered-content">
+        <span class="badge-pill"><i class="fas fa-mobile-screen-button"></i> Aplicativos &amp; Ferramentas</span>
+        <h2>Ecossistema OpenCNPJ</h2>
+        <p>Desenvolvemos soluções completas para integrar consultas de CNPJ no seu smartphone e diretamente no seu navegador web.</p>
+      </div>
+
+      <div class="ecosystem-grid">
+        <a [routerLink]="['/downloads/OpenCNPJ/Mobile']" class="eco-card">
+          <div class="eco-icon"><i class="fas fa-mobile-screen-button"></i></div>
+          <h3>OpenCNPJ Mobile</h3>
+          <p>Consulte dados cadastrais, sócios e CNAEs com agilidade no seu celular Android ou iOS.</p>
+          <div class="eco-tags">
+            <span><i class="fab fa-android"></i> Android APK</span>
+            <span><i class="fab fa-apple"></i> iOS</span>
+          </div>
+          <span class="eco-link">Acessar tela do aplicativo <i class="fas fa-arrow-right"></i></span>
+        </a>
+
+        <a [routerLink]="['/downloads/OpenCNPJ/Extensao']" class="eco-card">
+          <div class="eco-icon"><i class="fas fa-puzzle-piece"></i></div>
+          <h3>OpenCNPJ Extensão</h3>
+          <p>Destaque e consulte CNPJs automaticamente em páginas da web, lojas online e portais de cotação.</p>
+          <div class="eco-tags">
+            <span><i class="fab fa-chrome"></i> Chrome</span>
+            <span><i class="fab fa-edge"></i> Edge</span>
+          </div>
+          <span class="eco-link">Acessar tela da extensão <i class="fas fa-arrow-right"></i></span>
+        </a>
+      </div>
+
+      
+    </div>
+  </section>
+
+  <!-- Donation Section -->
+  <section id="donation" class="donation-section">
+    <div class="container centered-content">
+      <h2>Gostou do Projeto?</h2>
+      <p>Manter um serviço gratuito, rápido e confiável exige tempo e recursos. Se o <strong>OpenCNPJ</strong> ou o <strong>OpenCaramelo</strong> foram úteis para você, considere apoiar nossa iniciativa.</p>
+      <button type="button" (click)="openDonationModal()" class="btn btn-donate" style="margin-top: 1rem; padding: 1rem 2rem; font-size: 1.1rem;">
+        <i class="fas fa-mug-hot"></i> Pague um Café para o Desenvolvedor
+      </button>
+    </div>
+  </section>
+
+  <!-- Footer Oficial -->
+  <app-footer></app-footer>
+</main>

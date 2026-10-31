@@ -1,0 +1,91 @@
+<!-- Banner Flutuante de Consentimento -->
+@if (consentService.isBannerOpen()) {
+  <aside class="cookie-banner" role="dialog" aria-label="Aviso de Cookies e Privacidade">
+    <div class="cookie-banner-content">
+      <div class="cookie-banner-text">
+        <div class="cookie-icon-box">
+          <i class="fas fa-cookie-bite"></i>
+        </div>
+        <div class="cookie-text-body">
+          <h4>Privacidade &amp; Cookies</h4>
+          <p>
+            Utilizamos armazenamento local essencial para manter suas preferências de tema (claro/escuro) e cookies analíticos (Google Analytics) para mensurar o volume de acessos e downloads das ferramentas da comunidade.
+          </p>
+        </div>
+      </div>
+
+      <div class="cookie-banner-actions">
+        <button type="button" class="btn-cookie-settings" (click)="openSettingsModal()">
+          Personalizar
+        </button>
+        <button type="button" class="btn-cookie-essential" (click)="consentService.acceptEssentialOnly()">
+          Apenas Essenciais
+        </button>
+        <button type="button" class="btn-cookie-accept" (click)="consentService.acceptAll()">
+          Aceitar Todos
+        </button>
+      </div>
+    </div>
+  </aside>
+}
+
+<!-- Modal de Configurações Detalhadas de Cookies -->
+@if (consentService.isSettingsModalOpen()) {
+  <div class="cookie-modal-backdrop" (click)="consentService.closeSettings()">
+    <div class="cookie-modal-card" (click)="$event.stopPropagation()" role="dialog" aria-modal="true">
+      <div class="cookie-modal-header">
+        <div class="cookie-modal-title">
+          <i class="fas fa-sliders"></i>
+          <h3>Preferências de Privacidade &amp; Cookies</h3>
+        </div>
+        <button type="button" class="btn-close-modal" (click)="consentService.closeSettings()" aria-label="Fechar">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="cookie-modal-body">
+        <p class="cookie-modal-intro">
+          Você tem total controle sobre como seus dados e dados de navegação são tratados. Escolha quais categorias deseja autorizar:
+        </p>
+
+        <!-- Categoria 1: Essenciais -->
+        <div class="cookie-category-item">
+          <div class="cookie-category-info">
+            <div class="cookie-category-head">
+              <strong>Essenciais &amp; Interface (Tema)</strong>
+              <span class="badge-always-active">Sempre Ativo</span>
+            </div>
+            <p>
+              Necessários para o funcionamento básico da aplicação, como salvar sua preferência visual de tema (claro ou escuro) no seu próprio navegador via <code>localStorage</code>. Não realizam rastreamento pessoal nem telemetria externa.
+            </p>
+          </div>
+        </div>
+
+        <!-- Categoria 2: Analíticos -->
+        <div class="cookie-category-item">
+          <div class="cookie-category-info">
+            <div class="cookie-category-head">
+              <strong>Métricas &amp; Estatísticas (Google Analytics)</strong>
+              <label class="switch-toggle" aria-label="Ativar métricas do Google Analytics">
+                <input type="checkbox" [(ngModel)]="tempAnalytics">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <p>
+              Coletam dados anônimos de tráfego, páginas visitadas e cliques em links de download de aplicativos e extensões. Essas métricas ajudam nossa equipe de código aberto a entender o impacto da plataforma e priorizar melhorias.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="cookie-modal-footer">
+        <button type="button" class="btn-cookie-essential" (click)="consentService.acceptEssentialOnly()">
+          Recusar Analíticos
+        </button>
+        <button type="button" class="btn-cookie-accept" (click)="saveCustom()">
+          Salvar Minha Escolha
+        </button>
+      </div>
+    </div>
+  </div>
+}

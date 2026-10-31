@@ -1,0 +1,262 @@
+<main class="project-detail-page">
+  <!-- Hero Section -->
+  <section class="project-hero">
+    <div class="container">
+      <!-- Breadcrumb -->
+      <div class="breadcrumb-nav">
+        <a routerLink="/"><i class="fas fa-home"></i> Início</a>
+        <i class="fas fa-chevron-right separator"></i>
+        <span class="current">OpenCNPJ</span>
+      </div>
+
+      <div class="hero-layout">
+        <div class="hero-text-content">
+          <div class="hero-badges-row">
+            <span class="section-tag"><i class="fas fa-mobile-screen-button"></i> Aplicativo Móvel</span>
+            <span class="status-badge badge-active"><i class="fas fa-check-circle"></i> Disponível</span>
+          </div>
+
+          <h1>OpenCNPJ Mobile</h1>
+          <p class="tagline">
+            Consulte dados cadastrais completos, quadro societário (QSA) e CNAEs de qualquer empresa diretamente do seu smartphone em menos de 1 segundo.
+          </p>
+
+          <!-- Specs Rápidas -->
+          <div class="quick-specs-grid">
+            
+            <div class="spec-card">
+              <span class="spec-label">Sistemas</span>
+              <span class="spec-val">Android / iOS</span>
+            </div>
+            <div class="spec-card">
+              <span class="spec-label">Preço</span>
+              <span class="spec-val spec-free">100% Gratuito</span>
+            </div>
+          </div>
+
+          <!-- Ações Principais de Download -->
+          <div class="hero-download-ctas">
+            <button type="button" class="btn btn-primary disabled-store-btn" (click)="onStoreClick('google_play')">
+              <i class="fab fa-google-play"></i> Baixar na Google Play (Em breve)
+            </button>
+            <button type="button" class="btn btn-secondary disabled-store-btn" (click)="onStoreClick('app_store')">
+              <i class="fab fa-apple"></i> Baixar na App Store (Em breve)
+            </button>
+          </div>
+          @if (notifyFeedback()) {
+            <div class="store-feedback-toast">
+              <i class="fas fa-circle-check"></i>
+              <span>{{ notifyFeedback() }}</span>
+            </div>
+          }
+          <p class="download-footnote">
+            <i class="fas fa-shield-halved"></i> Aplicativo oficial, 100% gratuito, seguro e sem anúncios.
+            <span class="footnote-sep">•</span>
+            <a routerLink="/politica-de-privacidade" [queryParams]="{tab: 'mobile'}" class="footnote-link">
+              <i class="fas fa-file-shield"></i> Política de Privacidade
+            </a>
+          </p>
+        </div>
+
+        <!-- Phone Mockup Preview -->
+        <div class="hero-mockup-wrapper">
+          <div class="phone-mockup">
+            <div class="phone-speaker"></div>
+            <div class="phone-screen">
+              <!-- Top bar simulada -->
+              <div class="mock-status-bar">
+                <span>09:41</span>
+                <div class="mock-status-icons">
+                  <i class="fas fa-wifi"></i>
+                  <i class="fas fa-battery-full"></i>
+                </div>
+              </div>
+
+              <!-- Header do app -->
+              <div class="mock-app-header">
+                <div class="mock-logo">
+                  <i class="fas fa-paw"></i>
+                  <span>OpenCNPJ</span>
+                </div>
+                <span class="mock-version-tag">Mobile</span>
+              </div>
+
+              <!-- Barra de busca simulada -->
+              <div class="mock-search-box">
+                <i class="fas fa-magnifying-glass"></i>
+                <span>00.000.000/0001-91</span>
+              </div>
+
+              <!-- Card de resultado simulado -->
+              <div class="mock-result-card">
+                <div class="mock-company-header">
+                  <span class="mock-badge-status">ATIVA</span>
+                  <span class="mock-badge-nature">203-8 · S.A.</span>
+                </div>
+                <div class="mock-company-name">BANCO DO BRASIL S.A.</div>
+                <div class="mock-company-cnpj">00.000.000/0001-91</div>
+
+                <div class="mock-details-list">
+                  <div class="mock-detail-row">
+                    <span>Abertura:</span>
+                    <strong>01/08/1966</strong>
+                  </div>
+                  <div class="mock-detail-row">
+                    <span>Capital:</span>
+                    <strong>R$ 90.000.000.000,00</strong>
+                  </div>
+                  <div class="mock-detail-row">
+                    <span>Cidade/UF:</span>
+                    <strong>Brasília / DF</strong>
+                  </div>
+                  <div class="mock-detail-row">
+                    <span>Sócios/Diretores:</span>
+                    <strong class="mock-highlight-text">3 membros listados</strong>
+                  </div>
+                </div>
+
+                <div class="mock-card-actions">
+                  <span class="mock-btn-action"><i class="fas fa-copy"></i> Copiar</span>
+                  <span class="mock-btn-action"><i class="fas fa-share-nodes"></i> Compartilhar</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Opções de Download / Lojas -->
+  <section class="download-channels-section">
+    <div class="container">
+      <div class="section-title-area centered-content">
+        <span class="badge-pill"><i class="fas fa-download"></i> Central de Instalação</span>
+        <h2>Escolha a Opção de Download</h2>
+        <p>Disponibilizamos opções diretas de instalação para usuários e administradores:</p>
+      </div>
+
+      <div class="channels-grid">
+        <!-- Google Play -->
+        <div class="channel-card highlight-channel">
+          <div class="channel-icon icon-play">
+            <i class="fab fa-google-play"></i>
+          </div>
+          <div class="channel-content">
+            <div class="channel-header">
+              <h3>Google Play Store</h3>
+              <span class="tag-status pending">Em Breve</span>
+            </div>
+            <p>Versão oficial integrada com atualizações automáticas gerenciadas diretamente pela Google Play Store para Android.</p>
+            <ul class="channel-info-list">
+              <li><i class="fas fa-clock"></i> Em fase de homologação para publicação na Google Play Store</li>
+              <li><i class="fas fa-check"></i> Instalação segura com 1 clique e atualizações automáticas</li>
+            </ul>
+            <div class="channel-action">
+              <button type="button" class="btn btn-primary disabled-store-btn" (click)="onStoreClick('google_play')">
+                <i class="fab fa-google-play"></i> Baixar no Google Play (Em breve)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Apple App Store -->
+        <div class="channel-card">
+          <div class="channel-icon icon-apple">
+            <i class="fab fa-apple"></i>
+          </div>
+          <div class="channel-content">
+            <div class="channel-header">
+              <h3>Apple iOS (App Store)</h3>
+              <span class="tag-status pending">Em Breve</span>
+            </div>
+            <p>Aplicativo nativo para iPhone e iPad com suporte a Widgets do iOS e pesquisa rápida via Spotlight.</p>
+            <ul class="channel-info-list">
+              <li><i class="fas fa-clock"></i> TestFlight aberto para comunidade em breve</li>
+              <li><i class="fas fa-globe"></i> Acesse a versão web responsiva no navegador Safari</li>
+            </ul>
+            <div class="channel-action">
+              <button type="button" class="btn btn-primary disabled-store-btn" (click)="onStoreClick('app_store')">
+                <i class="fab fa-apple"></i> Baixar na App Store (Em breve)
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recursos & Diferenciais -->
+  <section class="features-section">
+    <div class="container">
+      <div class="section-title-area centered-content">
+        <span class="badge-pill"><i class="fas fa-star"></i> Recursos</span>
+        <h2>O que o OpenCNPJ Mobile oferece</h2>
+        <p>Projetado com foco em simplicidade, velocidade extrema e privacidade total para consultas no dia a dia.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-box">
+          <div class="feature-icon"><i class="fas fa-bolt-lightning"></i></div>
+          <h3>Busca Ultra Rápida</h3>
+          <p>Resultados em menos de 1 segundo consumindo a infraestrutura pública de alta disponibilidade do ecossistema OpenCaramelo.</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon"><i class="fas fa-users-gear"></i></div>
+          <h3>Quadro de Sócios (QSA) &amp; CNAEs</h3>
+          <p>Exibição organizada dos nomes dos administradores, sócios e atividades econômicas principais e secundárias.</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon"><i class="fas fa-clock-rotate-left"></i></div>
+          <h3>Histórico Local &amp; Favoritos</h3>
+          <p>Acesse rapidamente as empresas que você mais consulta sem precisar redigitar os 14 dígitos do CNPJ.</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon"><i class="fas fa-plane-slash"></i></div>
+          <h3>Modo Offline Inteligente</h3>
+          <p>As empresas já visualizadas ficam salvas em cache local, permitindo conferência cadastral mesmo sem conexão à internet.</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon"><i class="fas fa-shield-heart"></i></div>
+          <h3>Privacidade Absoluta</h3>
+          <p>Sem criação de conta, sem login, sem telemetria de navegação e sem propagandas irritantes. 100% livre e transparente.</p>
+          <a routerLink="/politica-de-privacidade" [queryParams]="{tab: 'mobile'}" class="feature-doc-link">
+            <i class="fas fa-file-shield"></i> Ler Termos &amp; Política de Privacidade do App &rarr;
+          </a>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon"><i class="fas fa-share-nodes"></i></div>
+          <h3>Exportação &amp; Compartilhamento</h3>
+          <p>Copie os dados cadastrais sanitizados ou compartilhe a ficha da empresa com clientes e fornecedores no WhatsApp.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rodapé de Navegação do Ecossistema -->
+  <section class="project-footer-nav">
+    <div class="container">
+      <div class="footer-nav-box">
+        <div class="nav-back">
+          <a routerLink="/" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Voltar para o Início</a>
+        </div>
+        <div class="nav-center-legal">
+          <a routerLink="/politica-de-privacidade" [queryParams]="{tab: 'mobile'}" class="legal-inline-link">
+            <i class="fas fa-shield-halved"></i> Política de Privacidade do App
+          </a>
+        </div>
+        <div class="nav-next">
+          <span class="next-label">Próxima Solução:</span>
+          <a [routerLink]="['/downloads/OpenCNPJ/Extensao']" class="next-project-link">
+            OpenCNPJ Extensão para Navegador <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

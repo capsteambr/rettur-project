@@ -1,0 +1,62 @@
+<footer class="site-footer">
+  <div class="container footer-container">
+    <div class="footer-brand-section">
+      <div class="footer-logo">
+        <img src="assets/opencnpj_logo.png" alt="OpenCNPJ" class="footer-logo-img">
+        <span>OpenCNPJ</span>
+      </div>
+      <p class="footer-parent-notice">
+        O <strong>OpenCNPJ</strong> é uma iniciativa gratuita desenvolvida e mantida sob a tutela do 
+        <a href="https://opencaramelo.com" target="_blank" rel="noopener noreferrer" class="parent-brand-link">
+          <i class="fas fa-paw"></i> <strong>OpenCaramelo</strong>
+        </a>.
+      </p>
+    </div>
+
+    <div class="footer-links-grid">
+      <div class="footer-col">
+        <h4>Ecossistema</h4>
+        <ul>
+          <li><a routerLink="/downloads/OpenCNPJ/Mobile">OpenCNPJ Mobile</a></li>
+          <li><a routerLink="/downloads/OpenCNPJ/Extensao">Extensão de Navegador</a></li>
+          <li><a routerLink="/api"><i class="fas fa-book"></i> Documentação da API</a></li>
+          <li><a href="https://kitana.opencnpj.com" target="_blank" rel="noopener noreferrer"><i class="fas fa-server"></i> Endpoint da API</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Código Aberto</h4>
+        <ul>
+          <li><a href="https://github.com/opencaramelo/opencnpj" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> Repositório GitHub</a></li>
+          <li><a href="https://github.com/opencaramelo/opencnpj/issues" target="_blank" rel="noopener noreferrer"><i class="fas fa-bug"></i> Relatar Problema / Issue</a></li>
+          <li><a href="https://opencaramelo.com" target="_blank" rel="noopener noreferrer"><i class="fas fa-paw"></i> OpenCaramelo</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Apoio &amp; Legal</h4>
+        <ul>
+          <li><a routerLink="/politica-de-privacidade"><i class="fas fa-shield-halved"></i> Política de Privacidade</a></li>
+          <li><a href="#donation" (click)="openDonationModal($event)"><i class="fas fa-mug-hot"></i> Apoiar o Projeto</a></li>
+          <li><button type="button" class="footer-cookie-link" (click)="openCookiePreferences($event)"><i class="fas fa-cookie-bite"></i> Preferências de Cookies</button></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-legal">
+      <p>
+        Os dados fornecidos pela API do <strong>OpenCNPJ</strong> e <strong>OpenCaramelo</strong> são 
+        coletados diretamente de <strong>fontes oficiais da Receita Federal do Brasil</strong> e <strong>não possuem caráter de documento legal</strong>. 
+        Este projeto <strong>não possui vínculo governamental</strong>.
+      </p>
+      <div class="footer-bottom-line">
+        <p class="copyright">
+          © 2026 OpenCNPJ &amp; OpenCaramelo. Todos os direitos reservados.
+        </p>
+        <button type="button" class="footer-cookie-badge-btn" (click)="openCookiePreferences($event)">
+          <i class="fas fa-sliders"></i> Gerenciar Cookies
+        </button>
+      </div>
+    </div>
+  </div>
+</footer>

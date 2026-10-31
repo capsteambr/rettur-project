@@ -1,0 +1,580 @@
+<div class="windows-environment">
+  <!-- Mode Switcher Top Bar -->
+  <div class="mode-switcher-bar">
+    <div class="switcher-brand">
+      <i class="fab fa-windows"></i>
+      <span>OpenCNPJ Windows 98 Desktop Experience</span>
+    </div>
+    <div class="switcher-links">
+      <a 
+        [routerLink]="currentCnpj() ? ['/', currentCnpj()] : ['/']" 
+        class="switch-btn">
+        <i class="fas fa-file-invoice"></i> Modo Padrão
+      </a>
+      <a 
+        [routerLink]="currentCnpj() ? ['/terminal', currentCnpj()] : ['/terminal']" 
+        class="switch-btn">
+        <i class="fab fa-linux"></i> Terminal Linux
+      </a>
+      <span class="switch-btn active">
+        <i class="fab fa-windows"></i> Windows 98 (Ativo)
+      </span>
+    </div>
+  </div>
+
+  <!-- Desktop Area -->
+  <div class="desktop-surface" (click)="isStartMenuOpen.set(false)">
+
+    <!-- Desktop Icons Column -->
+    <div class="desktop-icons">
+      <button type="button" class="desktop-icon-btn" (dblclick)="openWindow('cnpjApp')" (click)="focusWindow('cnpjApp')">
+        <div class="icon-graphic icon-exe">
+          <i class="fas fa-building"></i>
+        </div>
+        <span class="icon-title">Consulta CNPJ.exe</span>
+      </button>
+
+      <button type="button" class="desktop-icon-btn" (dblclick)="openWindow('cmdApp')" (click)="focusWindow('cmdApp')">
+        <div class="icon-graphic icon-cmd">
+          <i class="fas fa-terminal"></i>
+        </div>
+        <span class="icon-title">Prompt MS-DOS</span>
+      </button>
+
+      <button type="button" class="desktop-icon-btn" (dblclick)="openWindow('notepadApp')" (click)="focusWindow('notepadApp')">
+        <div class="icon-graphic icon-txt">
+          <i class="fas fa-file-lines"></i>
+        </div>
+        <span class="icon-title">LEIAME.txt</span>
+      </button>
+
+      <button type="button" class="desktop-icon-btn" (dblclick)="openWindow('mobileApp')" (click)="focusWindow('mobileApp')">
+        <div class="icon-graphic icon-app">
+          <i class="fas fa-mobile-screen"></i>
+        </div>
+        <span class="icon-title">OpenCNPJ Mobile.lnk</span>
+      </button>
+
+      <a routerLink="/downloads/OpenCNPJ/Extensao" class="desktop-icon-btn">
+        <div class="icon-graphic icon-ext">
+          <i class="fas fa-puzzle-piece"></i>
+        </div>
+        <span class="icon-title">Extensão Web.lnk</span>
+      </a>
+
+      <button type="button" class="desktop-icon-btn" (dblclick)="copyFeedback.set('A Lixeira está vazia.')">
+        <div class="icon-graphic icon-trash">
+          <i class="fas fa-trash-can"></i>
+        </div>
+        <span class="icon-title">Lixeira</span>
+      </button>
+    </div>
+
+    <!-- Feedback Banner Toast in Windows 98 Style -->
+    @if (copyFeedback(); as msg) {
+      <div class="win98-toast">
+        <i class="fas fa-info-circle"></i>
+        <span>{{ msg }}</span>
+      </div>
+    }
+
+    <!-- WINDOW 1: Consulta CNPJ.exe -->
+    @if (windows()['cnpjApp'].isOpen) {
+      <div 
+        class="win98-window" 
+        [class.minimized]="windows()['cnpjApp'].isMinimized"
+        [class.maximized]="windows()['cnpjApp'].isMaximized"
+        [style.z-index]="windows()['cnpjApp'].zIndex"
+        [style.left.px]="windows()['cnpjApp'].isMaximized ? 0 : windows()['cnpjApp'].x"
+        [style.top.px]="windows()['cnpjApp'].isMaximized ? 0 : windows()['cnpjApp'].y"
+        [style.width.px]="windows()['cnpjApp'].isMaximized ? '100%' : windows()['cnpjApp'].width"
+        (mousedown)="focusWindow('cnpjApp')">
+
+        <!-- Titlebar -->
+        <div class="win98-titlebar" (mousedown)="startDrag('cnpjApp', $event)">
+          <div class="titlebar-text">
+            <i class="fas fa-building"></i>
+            <span>{{ windows()['cnpjApp'].title }}</span>
+          </div>
+          <div class="titlebar-controls">
+            <button type="button" class="btn-win-ctrl" (click)="minimizeWindow('cnpjApp')" title="Minimizar">_</button>
+            <button type="button" class="btn-win-ctrl" (click)="toggleMaximizeWindow('cnpjApp')" title="Maximizar">□</button>
+            <button type="button" class="btn-win-ctrl btn-close" (click)="closeWindow('cnpjApp')" title="Fechar">✕</button>
+          </div>
+        </div>
+
+        <!-- Classic Menu Bar -->
+        <div class="win98-menubar">
+          <span class="menu-item">Arquivo</span>
+          <span class="menu-item" (click)="copyCnpjSummary()">Editar</span>
+          <span class="menu-item">Exibir</span>
+          <span class="menu-item" (click)="openWindow('notepadApp')">Ajuda</span>
+        </div>
+
+        <!-- Window Body -->
+        <div class="win98-window-body">
+
+          <!-- Search Toolbar Form -->
+          <div class="win98-groupbox search-box">
+            <legend>Parâmetros de Consulta Cadastral</legend>
+            <div class="form-row">
+              <label for="winCnpjInput" class="win-label">CNPJ da Empresa:</label>
+              <input 
+                type="text" 
+                id="winCnpjInput" 
+                class="win98-input" 
+                [ngModel]="cnpjInput()" 
+                (ngModelChange)="onCnpjInputChange($event)" 
+                (keydown.enter)="runCnpjConsultation()"
+                placeholder="Digite o CNPJ (ex: 00000000000191)..."
+                maxlength="18">
+              <button type="button" class="win98-btn" (click)="runCnpjConsultation()" [disabled]="isConsulting()">
+                {{ isConsulting() ? 'Aguarde...' : 'Consultar' }}
+              </button>
+              <button type="button" class="win98-btn" (click)="copyCnpjSummary()" [disabled]="!companyData()">
+                Copiar Ficha
+              </button>
+              @if (cnpjInput() || companyData()) {
+                <button type="button" class="win98-btn" (click)="clearSearch()">
+                  Limpar
+                </button>
+              }
+            </div>
+
+            <!-- Quick Presets -->
+            <div class="presets-row">
+              <span class="presets-label">Exemplos rápidos:</span>
+              @for (preset of cnpjService.CNPJ_PRESETS; track preset.value) {
+                <button type="button" class="win98-btn btn-small" (click)="setPreset(preset.value)">
+                  {{ preset.label }}
+                </button>
+              }
+            </div>
+          </div>
+
+          <!-- Error Alert -->
+          @if (errorMessage(); as err) {
+            <div class="win98-alert">
+              <i class="fas fa-triangle-exclamation"></i>
+              <span>{{ err }}</span>
+            </div>
+          }
+
+          <!-- Loading State -->
+          @if (isConsulting()) {
+            <div class="win98-groupbox loading-box" style="text-align: center; padding: 2.2rem 1.5rem; margin-top: 0.75rem; background: #fff; border: 2px inset #dfdfdf;">
+              <div style="font-size: 2rem; color: #000080; margin-bottom: 0.75rem;">
+                <i class="fas fa-circle-notch fa-spin"></i>
+              </div>
+              <div style="font-weight: bold; font-size: 0.95rem;">
+                Consultando base de dados pública...
+              </div>
+              <div style="color: #666; font-size: 0.85rem; margin-top: 0.25rem;">
+                Aguarde o retorno dos registros da Receita Federal.
+              </div>
+            </div>
+          }
+
+          <!-- Initial Empty State (Nenhum CNPJ consultado) -->
+          @if (!companyData() && !errorMessage() && !isConsulting()) {
+            <div class="win98-groupbox empty-details-box" style="text-align: center; padding: 2.2rem 1.5rem; margin-top: 0.75rem; background: #fff; border: 2px inset #dfdfdf;">
+              <div style="font-size: 2.5rem; color: #7f7f7f; margin-bottom: 0.75rem;">
+                <i class="fas fa-folder-open"></i>
+              </div>
+              <div style="font-weight: bold; font-size: 1rem; color: #000; margin-bottom: 0.35rem;">
+                Nenhum CNPJ consultado
+              </div>
+              <div style="color: #555; font-size: 0.85rem; max-width: 440px; margin: 0 auto; line-height: 1.5;">
+                Informe um número de CNPJ no campo acima ou clique em um dos exemplos rápidos para carregar os dados cadastrais da empresa.
+              </div>
+            </div>
+          }
+
+          <!-- Company Record Box -->
+          @if (companyData(); as company) {
+            <div class="win98-groupbox company-details-box">
+              <legend>Ficha Cadastral da Receita Federal</legend>
+
+              <div class="win98-fields-grid">
+                <div class="win-field full-row">
+                  <span class="f-label">Razão Social:</span>
+                  <div class="win-inset-val highlight-bold">{{ company.razaoSocial }}</div>
+                </div>
+
+                <div class="win-field">
+                  <span class="f-label">Nome Fantasia:</span>
+                  <div class="win-inset-val">{{ company.nomeFantasia || 'N/A' }}</div>
+                </div>
+
+                <div class="win-field">
+                  <span class="f-label">CNPJ Formatado:</span>
+                  <div class="win-inset-val mono-val">{{ cnpjService.formatCnpj(company.cnpj) }}</div>
+                </div>
+
+                <div class="win-field">
+                  <span class="f-label">Situação Cadastral:</span>
+                  <div class="win-inset-val status-badge-win">{{ company.situacaoCadastral }} ({{ company.dataSituacaoCadastral }})</div>
+                </div>
+
+                <div class="win-field">
+                  <span class="f-label">Início Atividades:</span>
+                  <div class="win-inset-val">{{ company.dataInicioAtividades || 'N/A' }}</div>
+                </div>
+
+                <div class="win-field">
+                  <span class="f-label">Capital Social:</span>
+                  <div class="win-inset-val">{{ cnpjService.formatCurrency(company.capitalSocial) }}</div>
+                </div>
+
+                <div class="win-field">
+                  <span class="f-label">Tipo:</span>
+                  <div class="win-inset-val">{{ company.matriz === 'Sim' || company.matriz === true ? 'Matriz' : 'Filial' }}</div>
+                </div>
+
+                <div class="win-field full-row">
+                  <span class="f-label">Natureza Jurídica:</span>
+                  <div class="win-inset-val">{{ company.naturezaJuridica || 'N/A' }}</div>
+                </div>
+
+                <div class="win-field full-row">
+                  <span class="f-label">Endereço Completo:</span>
+                  <div class="win-inset-val">
+                    {{ company.logradouro }}, {{ company.numero }} - {{ company.bairro }}, {{ company.municipio }}/{{ company.uf }} (CEP: {{ company.cep }})
+                  </div>
+                </div>
+
+                <div class="win-field">
+                  <span class="f-label">Telefone:</span>
+                  <div class="win-inset-val">{{ company.telefone || 'N/A' }}</div>
+                </div>
+
+                <div class="win-field">
+                  <span class="f-label">E-mail:</span>
+                  <div class="win-inset-val">{{ company.email || 'N/A' }}</div>
+                </div>
+              </div>
+
+              <!-- CNAEs Listbox -->
+              @if (company.cnaes && company.cnaes.length > 0) {
+                <div class="listbox-container">
+                  <span class="f-label">Atividades Econômicas (CNAE):</span>
+                  <div class="win98-listbox">
+                    <div class="listbox-item principal-cnae">
+                      [PRINCIPAL] {{ company.cnaes[0].cnae }} - {{ company.cnaes[0].descricao }}
+                    </div>
+                    @for (cnae of company.cnaes.slice(1); track cnae.cnae) {
+                      <div class="listbox-item">
+                        [SECUNDÁRIA] {{ cnae.cnae }} - {{ cnae.descricao }}
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+
+              <!-- Sócios Listbox -->
+              @if (company.socios && company.socios.length > 0) {
+                <div class="listbox-container" style="margin-top: 0.75rem;">
+                  <span class="f-label">Quadro de Sócios e Administradores (QSA):</span>
+                  <div class="win98-listbox">
+                    @for (socio of company.socios; track socio.nomeSocio) {
+                      <div class="listbox-item">
+                        &gt; {{ socio.nomeSocio }} ({{ socio.descricao }}) - Entrada: {{ socio.dataEntradaSociedade }} [Doc: {{ socio.cnpjCpfSocio || 'N/A' }}]
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Status Bar -->
+          <div class="win98-statusbar">
+            <span class="status-cell">{{ companyData() ? 'Ficha cadastral carregada' : (isConsulting() ? 'Consultando...' : 'Pronto para consulta') }}</span>
+            <span class="status-cell">Gateway: kitana.opencnpj.com</span>
+            <span class="status-cell">OpenCaramelo</span>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- WINDOW 2: Prompt MS-DOS (cmdApp) -->
+    @if (windows()['cmdApp'].isOpen) {
+      <div 
+        class="win98-window cmd-window" 
+        [class.minimized]="windows()['cmdApp'].isMinimized"
+        [class.maximized]="windows()['cmdApp'].isMaximized"
+        [style.z-index]="windows()['cmdApp'].zIndex"
+        [style.left.px]="windows()['cmdApp'].isMaximized ? 0 : windows()['cmdApp'].x"
+        [style.top.px]="windows()['cmdApp'].isMaximized ? 0 : windows()['cmdApp'].y"
+        [style.width.px]="windows()['cmdApp'].isMaximized ? '100%' : windows()['cmdApp'].width"
+        (mousedown)="focusWindow('cmdApp')">
+
+        <div class="win98-titlebar cmd-titlebar" (mousedown)="startDrag('cmdApp', $event)">
+          <div class="titlebar-text">
+            <i class="fas fa-terminal"></i>
+            <span>{{ windows()['cmdApp'].title }}</span>
+          </div>
+          <div class="titlebar-controls">
+            <button type="button" class="btn-win-ctrl" (click)="minimizeWindow('cmdApp')" title="Minimizar">_</button>
+            <button type="button" class="btn-win-ctrl" (click)="toggleMaximizeWindow('cmdApp')" title="Maximizar">□</button>
+            <button type="button" class="btn-win-ctrl btn-close" (click)="closeWindow('cmdApp')" title="Fechar">✕</button>
+          </div>
+        </div>
+
+        <div class="cmd-body" (click)="cmdInputRef.focus()">
+          <div class="cmd-output">
+            @for (line of cmdLines(); track $index) {
+              <div class="cmd-line">{{ line }}</div>
+            }
+          </div>
+          <div class="cmd-prompt-line">
+            <span class="cmd-prompt-label">C:\OPENCNPJ&gt;</span>
+            <input 
+              #cmdInputRef
+              type="text" 
+              class="cmd-input-field" 
+              [ngModel]="cmdInput()" 
+              (ngModelChange)="cmdInput.set($event)" 
+              (keydown)="handleCmdKeyDown($event)"
+              autofocus
+              spellcheck="false">
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- WINDOW 3: LEIAME.txt (Notepad) -->
+    @if (windows()['notepadApp'].isOpen) {
+      <div 
+        class="win98-window" 
+        [class.minimized]="windows()['notepadApp'].isMinimized"
+        [class.maximized]="windows()['notepadApp'].isMaximized"
+        [style.z-index]="windows()['notepadApp'].zIndex"
+        [style.left.px]="windows()['notepadApp'].isMaximized ? 0 : windows()['notepadApp'].x"
+        [style.top.px]="windows()['notepadApp'].isMaximized ? 0 : windows()['notepadApp'].y"
+        [style.width.px]="windows()['notepadApp'].isMaximized ? '100%' : windows()['notepadApp'].width"
+        (mousedown)="focusWindow('notepadApp')">
+
+        <div class="win98-titlebar" (mousedown)="startDrag('notepadApp', $event)">
+          <div class="titlebar-text">
+            <i class="fas fa-file-lines"></i>
+            <span>{{ windows()['notepadApp'].title }}</span>
+          </div>
+          <div class="titlebar-controls">
+            <button type="button" class="btn-win-ctrl" (click)="minimizeWindow('notepadApp')">_</button>
+            <button type="button" class="btn-win-ctrl" (click)="toggleMaximizeWindow('notepadApp')">□</button>
+            <button type="button" class="btn-win-ctrl btn-close" (click)="closeWindow('notepadApp')">✕</button>
+          </div>
+        </div>
+
+        <div class="win98-menubar">
+          <span class="menu-item">Arquivo</span>
+          <span class="menu-item">Editar</span>
+          <span class="menu-item">Formatar</span>
+          <span class="menu-item">Ajuda</span>
+        </div>
+
+        <div class="notepad-body">
+          <textarea class="notepad-textarea" readonly>
+======================================================
+PROJETO OPENCNPJ & OPENCARAMELO (1998-2026)
+======================================================
+
+O OpenCNPJ é uma iniciativa gratuita dedicada a
+fornecer dados cadastrais públicos de forma rápida,
+gratuita e sem burocracia para toda a comunidade brasileira.
+
+RECURSOS DISPONÍVEIS NO ECOSSISTEMA:
+------------------------------------------------------
+1. Consulta Web Moderna (/consulta)
+2. Terminal Linux CRT (/consulta/terminal)
+3. Desktop Retrô Windows 98 (/consulta/windows)
+4. OpenCNPJ Mobile (Aplicativo Android / iOS)
+5. Extensão de Navegador (Chrome, Firefox, Edge)
+
+INICIATIVA MÃE:
+------------------------------------------------------
+Desenvolvido sob a tutela do OpenCaramelo:
+Website: https://opencaramelo.com
+Repositório: https://github.com/opencaramelo/opencnpj
+
+Para consultar um CNPJ via linha de comando, abra o
+Prompt do MS-DOS e digite:
+C:\OPENCNPJ> cnpj 00000000000191
+          </textarea>
+        </div>
+      </div>
+    }
+
+    <!-- WINDOW 4: Mobile & Extensão -->
+    @if (windows()['mobileApp'].isOpen) {
+      <div 
+        class="win98-window" 
+        [class.minimized]="windows()['mobileApp'].isMinimized"
+        [class.maximized]="windows()['mobileApp'].isMaximized"
+        [style.z-index]="windows()['mobileApp'].zIndex"
+        [style.left.px]="windows()['mobileApp'].isMaximized ? 0 : windows()['mobileApp'].x"
+        [style.top.px]="windows()['mobileApp'].isMaximized ? 0 : windows()['mobileApp'].y"
+        [style.width.px]="windows()['mobileApp'].isMaximized ? '100%' : windows()['mobileApp'].width"
+        (mousedown)="focusWindow('mobileApp')">
+
+        <div class="win98-titlebar" (mousedown)="startDrag('mobileApp', $event)">
+          <div class="titlebar-text">
+            <i class="fas fa-mobile-screen"></i>
+            <span>{{ windows()['mobileApp'].title }}</span>
+          </div>
+          <div class="titlebar-controls">
+            <button type="button" class="btn-win-ctrl" (click)="minimizeWindow('mobileApp')">_</button>
+            <button type="button" class="btn-win-ctrl" (click)="toggleMaximizeWindow('mobileApp')">□</button>
+            <button type="button" class="btn-win-ctrl btn-close" (click)="closeWindow('mobileApp')">✕</button>
+          </div>
+        </div>
+
+        <div class="win98-window-body" style="padding: 1.5rem; text-align: center;">
+          <div class="win98-groupbox">
+            <legend>Downloads Disponíveis</legend>
+            <p style="font-size: 0.9rem; margin-bottom: 1rem;">
+              Escolha a versão desejada para instalar e consultar dados em qualquer dispositivo:
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem; max-width: 320px; margin: 0 auto;">
+              <a routerLink="/downloads/OpenCNPJ/Mobile" class="win98-btn" style="text-decoration: none; padding: 0.6rem;">
+                <i class="fab fa-android"></i> Abrir OpenCNPJ Mobile
+              </a>
+              <a routerLink="/downloads/OpenCNPJ/Extensao" class="win98-btn" style="text-decoration: none; padding: 0.6rem;">
+                <i class="fab fa-chrome"></i> Abrir OpenCNPJ Extensão
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+  </div>
+
+  <!-- Windows 98 Taskbar -->
+  <footer class="win98-taskbar">
+    <!-- Start Button -->
+    <button 
+      type="button" 
+      class="win98-start-btn" 
+      [class.active]="isStartMenuOpen()" 
+      (click)="isStartMenuOpen.set(!isStartMenuOpen()); $event.stopPropagation()">
+      <div class="start-logo">
+        <span class="logo-sq sq-red"></span>
+        <span class="logo-sq sq-green"></span>
+        <span class="logo-sq sq-blue"></span>
+        <span class="logo-sq sq-yellow"></span>
+      </div>
+      <strong>Iniciar</strong>
+    </button>
+
+    <!-- Start Menu Popup -->
+    @if (isStartMenuOpen()) {
+      <div class="win98-start-menu" (click)="$event.stopPropagation()">
+        <div class="start-sidebar">
+          <span><strong>OpenCNPJ</strong> 98</span>
+        </div>
+        <div class="start-menu-items">
+          <button type="button" class="start-item" (click)="openWindow('cnpjApp')">
+            <i class="fas fa-building start-icon"></i>
+            <span>Consulta CNPJ.exe</span>
+          </button>
+          <button type="button" class="start-item" (click)="openWindow('cmdApp')">
+            <i class="fas fa-terminal start-icon"></i>
+            <span>Prompt do MS-DOS</span>
+          </button>
+          <button type="button" class="start-item" (click)="openWindow('notepadApp')">
+            <i class="fas fa-file-lines start-icon"></i>
+            <span>Bloco de Notas (LEIAME)</span>
+          </button>
+          <button type="button" class="start-item" (click)="openWindow('mobileApp')">
+            <i class="fas fa-mobile-screen start-icon"></i>
+            <span>OpenCNPJ Mobile</span>
+          </button>
+
+          <div class="start-divider"></div>
+
+          <a 
+            [routerLink]="currentCnpj() ? ['/consulta'] : ['/']" 
+            [queryParams]="currentCnpj() ? { cnpj: currentCnpj() } : {}" 
+            class="start-item">
+            <i class="fas fa-file-invoice start-icon"></i>
+            <span>Modo Consulta Padrão</span>
+          </a>
+          <a 
+            [routerLink]="['/consulta/terminal']" 
+            [queryParams]="currentCnpj() ? { cnpj: currentCnpj() } : {}" 
+            class="start-item">
+            <i class="fab fa-linux start-icon"></i>
+            <span>Terminal Retrô Linux</span>
+          </a>
+          <a routerLink="/" class="start-item">
+            <i class="fas fa-home start-icon"></i>
+            <span>Página Inicial</span>
+          </a>
+
+          <div class="start-divider"></div>
+
+          <button type="button" class="start-item" (click)="copyFeedback.set('Agora você pode desligar seu computador com segurança.')">
+            <i class="fas fa-power-off start-icon"></i>
+            <span>Desligar...</span>
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Open Windows Taskbar List -->
+    <div class="taskbar-windows-list">
+      @if (windows()['cnpjApp'].isOpen) {
+        <button 
+          type="button" 
+          class="taskbar-win-tab" 
+          [class.active]="!windows()['cnpjApp'].isMinimized"
+          (click)="focusWindow('cnpjApp')">
+          <i class="fas fa-building"></i>
+          <span>Consulta CNPJ</span>
+        </button>
+      }
+
+      @if (windows()['cmdApp'].isOpen) {
+        <button 
+          type="button" 
+          class="taskbar-win-tab" 
+          [class.active]="!windows()['cmdApp'].isMinimized"
+          (click)="focusWindow('cmdApp')">
+          <i class="fas fa-terminal"></i>
+          <span>MS-DOS Prompt</span>
+        </button>
+      }
+
+      @if (windows()['notepadApp'].isOpen) {
+        <button 
+          type="button" 
+          class="taskbar-win-tab" 
+          [class.active]="!windows()['notepadApp'].isMinimized"
+          (click)="focusWindow('notepadApp')">
+          <i class="fas fa-file-lines"></i>
+          <span>LEIAME.txt</span>
+        </button>
+      }
+
+      @if (windows()['mobileApp'].isOpen) {
+        <button 
+          type="button" 
+          class="taskbar-win-tab" 
+          [class.active]="!windows()['mobileApp'].isMinimized"
+          (click)="focusWindow('mobileApp')">
+          <i class="fas fa-mobile-screen"></i>
+          <span>Mobile &amp; Extensão</span>
+        </button>
+      }
+    </div>
+
+    <!-- System Tray (Clock & Icons) -->
+    <div class="win98-tray">
+      <i class="fas fa-volume-high tray-icon" title="Áudio"></i>
+      <i class="fas fa-network-wired tray-icon" title="Rede Conectada"></i>
+      <span class="tray-clock">{{ currentTime() }}</span>
+    </div>
+  </footer>
+</div>

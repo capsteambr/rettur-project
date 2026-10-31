@@ -1,70 +1,148 @@
 import React from 'react';
-import { Settings, Sparkles } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 
 interface HeaderProps {
   onOpenSettings: () => void;
   onOpenExamples: () => void;
+  isDark: boolean;
+  onToggleTheme: () => void;
   serverOnline: boolean | null;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   onOpenSettings,
   onOpenExamples,
+  isDark,
+  onToggleTheme,
   serverOnline,
 }) => {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   return (
-    <header className="border-b border-slate-200 bg-white/80 backdrop-blur-md sticky top-0 z-40">
-      <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+    <header className="sticky top-0 z-40 w-full border-b border-border-custom bg-main/90 backdrop-blur-md transition-colors duration-200">
+      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
         {/* Logo & Marca */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center text-2xl shadow-sm">
-            🐼
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-extrabold text-lg text-slate-900 tracking-tight">Condinome Panda</span>
-              <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                Linguagem Simples
+        <div className="flex items-center gap-6">
+          <Link to="/" className="flex items-center gap-3 group">
+            <span className="text-2xl transition group-hover:scale-110">🐼</span>
+            <div className="flex flex-col">
+              <span className="font-extrabold text-base tracking-tight text-primary-text flex items-center gap-1.5">
+                Condinome Panda
+                <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.2 rounded-md bg-accent/15 text-accent border border-accent/20">
+                  AI Legal
+                </span>
+              </span>
+              <span className="text-[10px] text-secondary-text hidden sm:inline">
+                Auditoria e Simplificação de Contratos
               </span>
             </div>
-            <p className="text-xs text-slate-500">Auditoria inteligente para quem não tem advogado</p>
-          </div>
+          </Link>
+
+          {/* Links Internos */}
+          <nav className="hidden md:flex items-center gap-1 text-xs font-semibold text-secondary-text">
+            <Link
+              to="/api"
+              className={`px-3 py-1.5 rounded-lg hover:text-primary-text hover:bg-card transition flex items-center gap-1.5 ${
+                currentPath === '/api' ? 'text-accent bg-card font-bold' : ''
+              }`}
+            >
+              <i className="fas fa-book-open text-xs"></i>
+              <span>Documentação API</span>
+            </Link>
+          </nav>
         </div>
 
-        {/* Ações do Header */}
-        <div className="flex items-center gap-3">
+        {/* Grupo de Modos Retrô (Pílula Estilo Modelo de Consulta) */}
+        <div className="hidden lg:flex items-center gap-1 bg-card border border-border-custom px-2 py-1 rounded-full shadow-inner">
+          <Link
+            to="/"
+            className={`px-2.5 py-1 rounded-full text-xs font-bold transition flex items-center gap-1.5 ${
+              currentPath === '/'
+                ? 'bg-accent text-slate-950 shadow-sm'
+                : 'text-secondary-text hover:text-primary-text'
+            }`}
+            title="Interface Web Padrão"
+          >
+            <i className="fas fa-file-contract"></i>
+            <span>Web Padrão</span>
+          </Link>
+
+          <Link
+            to="/terminal"
+            className={`px-2.5 py-1 rounded-full text-xs font-bold transition flex items-center gap-1.5 ${
+              currentPath === '/terminal' || currentPath === '/linux'
+                ? 'bg-accent text-slate-950 shadow-sm'
+                : 'text-secondary-text hover:text-primary-text'
+            }`}
+            title="Terminal Retrô Linux"
+          >
+            <i className="fab fa-linux"></i>
+            <span>Terminal Linux</span>
+          </Link>
+
+          <Link
+            to="/windows"
+            className={`px-2.5 py-1 rounded-full text-xs font-bold transition flex items-center gap-1.5 ${
+              currentPath === '/windows'
+                ? 'bg-accent text-slate-950 shadow-sm'
+                : 'text-secondary-text hover:text-primary-text'
+            }`}
+            title="Windows 98 Desktop"
+          >
+            <i className="fab fa-windows"></i>
+            <span>Windows 98</span>
+          </Link>
+        </div>
+
+        {/* Ações da Direita */}
+        <div className="flex items-center gap-2 sm:gap-3">
           {/* Status do Backend */}
-          <div className="hidden sm:flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">
+          <div className="hidden xl:flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full bg-card border border-border-custom text-secondary-text">
             <span
               className={`w-2 h-2 rounded-full ${
                 serverOnline === true
-                  ? 'bg-emerald-500 ring-2 ring-emerald-200'
+                  ? 'bg-emerald-500 shadow-sm shadow-emerald-500/50'
                   : serverOnline === false
-                  ? 'bg-rose-500 ring-2 ring-rose-200'
+                  ? 'bg-rose-500'
                   : 'bg-amber-400'
               }`}
             />
-            {serverOnline === true ? 'Backend Conectado' : serverOnline === false ? 'Backend Offline' : 'Verificando...'}
+            {serverOnline === true ? 'API Online' : serverOnline === false ? 'API Offline' : 'Checando...'}
           </div>
 
-          {/* Botão de Exemplos para Hackathon */}
+          {/* Exemplos Rápidos */}
           <button
             onClick={onOpenExamples}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 transition"
-            title="Usar contrato pré-carregado para demonstração rápida"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-secondary-text hover:text-primary-text bg-card hover:bg-card-hover border border-border-custom transition shadow-sm"
+            title="Carregar contrato de exemplo"
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-            <span className="hidden md:inline">Exemplos Rápidos</span>
+            <i className="fas fa-wand-magic-sparkles text-amber-400 text-xs"></i>
+            <span className="hidden sm:inline">Exemplos</span>
           </button>
 
-          {/* Botão de Configurações de IA */}
+          {/* Configurações de IA */}
           <button
             onClick={onOpenSettings}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 transition"
-            title="Configurar provedor de IA (Ollama Local ou Nuvem)"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-secondary-text hover:text-primary-text bg-card hover:bg-card-hover border border-border-custom transition shadow-sm"
+            title="Configurar Chaves e Modelos de IA"
           >
-            <Settings className="w-3.5 h-3.5 text-slate-500" />
-            <span>Configurar IA</span>
+            <i className="fas fa-gear text-xs"></i>
+            <span className="hidden sm:inline">Configurar IA</span>
+          </button>
+
+          {/* Alternador de Tema Claro / Escuro */}
+          <button
+            onClick={onToggleTheme}
+            className="w-9 h-9 rounded-xl flex items-center justify-center text-secondary-text hover:text-primary-text bg-card hover:bg-card-hover border border-border-custom transition"
+            title={isDark ? 'Alternar para tema claro' : 'Alternar para tema escuro'}
+            aria-label="Trocar tema"
+          >
+            {isDark ? (
+              <i className="fas fa-sun text-amber-400 text-sm"></i>
+            ) : (
+              <i className="fas fa-moon text-slate-700 text-sm"></i>
+            )}
           </button>
         </div>
       </div>

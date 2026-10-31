@@ -1,0 +1,367 @@
+<main class="privacy-page">
+  <!-- Hero Section -->
+  <section class="privacy-hero">
+    <div class="container">
+      <!-- Breadcrumb -->
+      <div class="breadcrumb-nav">
+        <a routerLink="/"><i class="fas fa-home"></i> Início</a>
+        <i class="fas fa-chevron-right separator"></i>
+        <span class="current">Política de Privacidade</span>
+      </div>
+
+      <div class="hero-content">
+        <span class="section-tag">
+          <i class="fas fa-shield-halved"></i> Transparência &amp; LGPD
+        </span>
+        <h1>Política de Privacidade do Ecossistema OpenCNPJ</h1>
+        <p class="tagline">
+          Esta política descreve como o <strong>OpenCNPJ</strong> trata dados cadastrais públicos e garante total segurança, sigilo e conformidade nas nossas soluções: <strong>Extensão Web</strong>, <strong>Aplicativo Mobile</strong> e <strong>Plataforma Web/API</strong>.
+        </p>
+        <div class="policy-meta">
+          <span><i class="far fa-calendar-check"></i> Última atualização: {{ lastUpdated }}</span>
+          <span><i class="fas fa-scale-balanced"></i> Em conformidade com a LGPD (Lei nº 13.709/2018)</span>
+        </div>
+      </div>
+
+      <!-- Navegação de Abas -->
+      <div class="policy-tabs-nav">
+        <button 
+          type="button" 
+          class="tab-btn" 
+          [class.active]="activeTab() === 'extensao'"
+          (click)="setTab('extensao')">
+          <i class="fas fa-puzzle-piece"></i>
+          <span class="tab-title">Extensão de Navegador</span>
+          <span class="tab-badge">Chrome &amp; Edge</span>
+        </button>
+
+        <button 
+          type="button" 
+          class="tab-btn" 
+          [class.active]="activeTab() === 'mobile'"
+          (click)="setTab('mobile')">
+          <i class="fas fa-mobile-screen-button"></i>
+          <span class="tab-title">Aplicativo Mobile</span>
+          <span class="tab-badge">Android &amp; iOS</span>
+        </button>
+
+        <button 
+          type="button" 
+          class="tab-btn" 
+          [class.active]="activeTab() === 'geral'"
+          (click)="setTab('geral')">
+          <i class="fas fa-globe"></i>
+          <span class="tab-title">Plataforma Web &amp; API</span>
+          <span class="tab-badge">Geral</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Conteúdo Principal -->
+  <section class="privacy-content-section">
+    <div class="container">
+      
+      <!-- ========================================================================= -->
+      <!-- ABA 1: POLÍTICA DA EXTENSÃO DE NAVEGADOR (CHROME & EDGE) -->
+      <!-- ========================================================================= -->
+      @if (activeTab() === 'extensao') {
+        <article class="policy-document">
+          <header class="doc-header">
+            <div class="doc-badge-row">
+              <span class="doc-badge badge-ext"><i class="fab fa-chrome"></i> Google Chrome</span>
+              <span class="doc-badge badge-ext"><i class="fab fa-edge"></i> Microsoft Edge</span>
+              <span class="doc-badge badge-mv3">Manifest V3</span>
+            </div>
+            <h2>Política de Privacidade — OpenCNPJ Extensão de Navegador</h2>
+            <p class="doc-lead">
+              Declaração oficial de privacidade, permissões e tratamento de dados para publicação na <strong>Chrome Web Store</strong> e <strong>Microsoft Edge Add-ons</strong>.
+            </p>
+          </header>
+
+          <!-- Destaque Obrigatório exigido pelas Lojas -->
+          <div class="compliance-callout">
+            <div class="callout-icon"><i class="fas fa-shield-check"></i></div>
+            <div class="callout-text">
+              <h3>Declaração Expressa de Não Coleta e Não Venda de Dados</h3>
+              <p>
+                A extensão <strong>OpenCNPJ para Navegadores</strong>:
+              </p>
+              <ul>
+                <li><strong>NÃO coleta, NÃO armazena e NÃO monitora dados pessoais de navegação</strong>, URLs acessadas, histórico do usuário, senhas digitadas, cookies de sessão ou formulários preenchidos.</li>
+                <li><strong>NÃO vende, NÃO compartilha e NÃO transfere a terceiros</strong> quaisquer dados ou métricas de uso para fins comerciais, publicitários ou de rastreamento.</li>
+                <li><strong>Utiliza estritamente as sequências identificadas como CNPJ</strong> para efetuar a consulta direta à API oficial pública do serviço, sob demanda ou por detecção contextual.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="policy-body">
+            <section class="policy-block">
+              <h3>1. Finalidade da Extensão</h3>
+              <p>
+                A extensão tem como único propósito permitir que profissionais, desenvolvedores e pesquisadores identifiquem dados cadastrais públicos de pessoas jurídicas (como Razão Social, Situação Cadastral, CNAEs e Sócios) diretamente enquanto navegam na web, através de cliques em CNPJs reconhecidos ou via menu de contexto do navegador.
+              </p>
+            </section>
+
+            <section class="policy-block">
+              <h3>2. Justificativa Detalhada das Permissões Solicitadas</h3>
+              <p>
+                A extensão solicita apenas as permissões estritamente necessárias para o seu funcionamento conforme o padrão <strong>Manifest V3</strong>:
+              </p>
+
+              <div class="permissions-list">
+                <div class="permission-item">
+                  <div class="perm-header">
+                    <code class="perm-name">content_scripts (matches: http://*/*, https://*/*)</code>
+                    <span class="perm-tag">Injeção no DOM</span>
+                  </div>
+                  <p>
+                    <strong>Por que é necessária:</strong> Permite que o script auxiliar analise os nós de texto das páginas abertas para detectar padrões textuais de 14 dígitos correspondentes ao formato do Cadastro Nacional da Pessoa Jurídica (ex: <code>00.000.000/0001-91</code>) e aplicar uma marcação interativa visual (hover card).
+                  </p>
+                  <p class="perm-guarantee">
+                    <i class="fas fa-circle-check"></i> <strong>Garantia de segurança:</strong> O script opera isolado (sandbox), não lê campos protegidos (como <code>input type="password"</code> ou áreas sensíveis), não envia o conteúdo das páginas visitadas para nenhum servidor externo e não grava históricos de navegação.
+                  </p>
+                </div>
+
+                <div class="permission-item">
+                  <div class="perm-header">
+                    <code class="perm-name">storage (chrome.storage.local)</code>
+                    <span class="perm-tag">Armazenamento Local</span>
+                  </div>
+                  <p>
+                    <strong>Por que é necessária:</strong> Utilizada única e exclusivamente na memória local da máquina do usuário para persistir preferências de interface (modo claro/escuro, chave de ativação do destaque automático, lista de domínios ignorados) e o histórico local de consultas rápidas.
+                  </p>
+                  <p class="perm-guarantee">
+                    <i class="fas fa-circle-check"></i> <strong>Garantia de segurança:</strong> Nenhum dado contido no <code>storage.local</code> é sincronizado com servidores em nuvem ou acessível por terceiros. O usuário pode limpar esse histórico a qualquer momento nas Opções da extensão.
+                  </p>
+                </div>
+
+                <div class="permission-item">
+                  <div class="perm-header">
+                    <code class="perm-name">contextMenus</code>
+                    <span class="perm-tag">Menu do Botão Direito</span>
+                  </div>
+                  <p>
+                    <strong>Por que é necessária:</strong> Adiciona o atalho <em>"Consultar CNPJ selecionado"</em> no menu de contexto do botão direito quando o usuário seleciona um texto qualquer na página.
+                  </p>
+                </div>
+
+                <div class="permission-item">
+                  <div class="perm-header">
+                    <code class="perm-name">host_permissions (https://kitana.opencnpj.com/*)</code>
+                    <span class="perm-tag">Comunicação de Rede</span>
+                  </div>
+                  <p>
+                    <strong>Por que é necessária:</strong> Autoriza a extensão a realizar requisições HTTPS à API oficial pública do OpenCNPJ (<code>kitana.opencnpj.com</code>) para recuperar a ficha cadastral do CNPJ que o usuário optou por visualizar. Nenhuma outra rota ou host é consultado.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section class="policy-block">
+              <h3>3. Natureza dos Dados Consultados</h3>
+              <p>
+                Todos os dados retornados pela extensão (Razão Social, Nome Fantasia, CNAE, Capital Social, QSA, Endereço e Situação Cadastral) provêm dos <strong>Dados Abertos da Receita Federal do Brasil</strong>, classificados legalmente como <strong>dados manifestamente públicos</strong> nos termos do Art. 7º, § 3º e § 4º da Lei Geral de Proteção de Dados (Lei 13.709/2018 - LGPD).
+              </p>
+            </section>
+
+            <section class="policy-block">
+              <h3>4. Conformidade com as Políticas de Desenvolvedor</h3>
+              <p>
+                Esta extensão cumpre integralmente a <em>Chrome Web Store Developer Program Policy</em> e a <em>Microsoft Edge Add-ons Developer Agreement</em>, respeitando os requisitos de Uso Limitado (Limited Use Requirements), Política de Dados do Usuário (User Data FAQ) e segurança de código do Manifest V3.
+              </p>
+            </section>
+
+            <section class="policy-block">
+              <h3>5. Seus Controles de Privacidade na Extensão</h3>
+              <p>Você tem total controle sobre o funcionamento da extensão:</p>
+              <ul>
+                <li>Pode desativar o destaque automático nas Opções e usar apenas a consulta manual por pop-up ou menu de contexto.</li>
+                <li>Pode adicionar domínios específicos à Lista de Bloqueio (Blacklist) para que a extensão nunca atue neles.</li>
+                <li>Pode limpar todo o histórico de consultas locais com um único clique na tela de configurações.</li>
+              </ul>
+            </section>
+          </div>
+        </article>
+      }
+
+      <!-- ========================================================================= -->
+      <!-- ABA 2: POLÍTICA DO APLICATIVO MOBILE (ANDROID & IOS) -->
+      <!-- ========================================================================= -->
+      @if (activeTab() === 'mobile') {
+        <article class="policy-document">
+          <header class="doc-header">
+            <div class="doc-badge-row">
+              <span class="doc-badge badge-mobile"><i class="fab fa-android"></i> Google Play</span>
+              <span class="doc-badge badge-mobile"><i class="fab fa-apple"></i> Apple App Store</span>
+              <span class="doc-badge">Versão 2.0.0</span>
+            </div>
+            <h2>Política de Privacidade — OpenCNPJ Mobile</h2>
+            <p class="doc-lead">
+              Diretrizes de privacidade e tratamento de dados para o aplicativo oficial móvel <strong>OpenCNPJ Mobile</strong> para Android e iOS.
+            </p>
+          </header>
+
+          <div class="compliance-callout">
+            <div class="callout-icon"><i class="fas fa-mobile-screen-button"></i></div>
+            <div class="callout-text">
+              <h3>Privacidade por Padrão (Privacy by Design)</h3>
+              <p>
+                O aplicativo móvel OpenCNPJ foi construído para ser uma ferramenta de utilidade pública: <strong>sem anúncios invasivos, sem rastreamento de localização e sem necessidade de criar conta ou fornecer dados pessoais</strong> para utilizar todas as funcionalidades.
+              </p>
+            </div>
+          </div>
+
+          <div class="policy-body">
+            <section class="policy-block">
+              <h3>1. Coleta de Informações Pessoais</h3>
+              <p>
+                O aplicativo <strong>não solicita e não coleta</strong> nome, e-mail, telefone, CPF, localização geográfica por GPS ou dados biométricos do usuário. O aplicativo pode ser utilizado de forma 100% anônima desde a instalação.
+              </p>
+            </section>
+
+            <section class="policy-block">
+              <h3>2. Permissões Solicitadas no Dispositivo</h3>
+              <div class="permissions-list">
+                <div class="permission-item">
+                  <div class="perm-header">
+                    <code class="perm-name">Acesso à Internet (android.permission.INTERNET)</code>
+                    <span class="perm-tag">Rede</span>
+                  </div>
+                  <p>
+                    Necessária para efetuar as requisições HTTPS criptografadas de consulta de CNPJ aos servidores públicos do ecossistema OpenCNPJ e OpenCaramelo.
+                  </p>
+                </div>
+
+                <div class="permission-item">
+                  <div class="perm-header">
+                    <code class="perm-name">Armazenamento Local Seguro (AsyncStorage / SQLite Local)</code>
+                    <span class="perm-tag">Cache Local</span>
+                  </div>
+                  <p>
+                    Utilizado no próprio aparelho do usuário para salvar o histórico de CNPJs consultados recentemente e a lista de empresas marcadas como "Favoritas". Esses dados pertencem ao usuário, não são sincronizados remotamente e são apagados caso o usuário limpe os dados ou desinstale o app.
+                  </p>
+                </div>
+
+                <div class="permission-item">
+                  <div class="perm-header">
+                    <code class="perm-name">Exportação e Compartilhamento de Arquivos</code>
+                    <span class="perm-tag">PDF &amp; Ficha Cadastral</span>
+                  </div>
+                  <p>
+                    Quando você clica para exportar um PDF ou compartilhar dados de uma empresa (via WhatsApp, e-mail ou mensagens), o arquivo é gerado localmente pelo aplicativo e enviado apenas através do seletor nativo do sistema operacional do seu telefone.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section class="policy-block">
+              <h3>3. Publicidade e Telemetria</h3>
+              <p>
+                O aplicativo <strong>não comercializa dados com corretores de dados (data brokers)</strong> e não inclui rastreadores de terceiros invasivos. Eventuais métricas de estabilidade e telemetria operacional de falhas (crashes) são anônimas e têm como único objetivo garantir que o app não feche inesperadamente em aparelhos específicos.
+              </p>
+            </section>
+
+            <section class="policy-block">
+              <h3>4. Conformidade com Google Play &amp; Apple App Store</h3>
+              <p>
+                Este documento atende às exigências da <em>Google Play User Data Policy</em> e das <em>Apple App Store Review Guidelines</em> (Seção 5 - Proteção de Dados e Privacidade).
+              </p>
+            </section>
+          </div>
+        </article>
+      }
+
+      <!-- ========================================================================= -->
+      <!-- ABA 3: POLÍTICA DA PLATAFORMA WEB E APIS PÚBLICAS -->
+      <!-- ========================================================================= -->
+      @if (activeTab() === 'geral') {
+        <article class="policy-document">
+          <header class="doc-header">
+            <div class="doc-badge-row">
+              <span class="doc-badge badge-web"><i class="fas fa-globe"></i> opencnpj.com</span>
+              <span class="doc-badge badge-web"><i class="fas fa-paw"></i> OpenCaramelo</span>
+              <span class="doc-badge">LGPD Compliant</span>
+            </div>
+            <h2>Política de Privacidade Geral — Plataforma Web &amp; API</h2>
+            <p class="doc-lead">
+              Diretrizes gerais de governança de dados, cookies, bases legais e direitos do titular no portal <strong>opencnpj.com</strong>.
+            </p>
+          </header>
+
+          <div class="policy-body">
+            <section class="policy-block">
+              <h3>1. Origem e Base Legal dos Dados Cadastrais</h3>
+              <p>
+                O OpenCNPJ disponibiliza dados cadastrais de pessoas jurídicas ativas e inativas no Brasil. Todos os registros disponibilizados são originários da base oficial de <strong>Dados Abertos da Receita Federal do Brasil</strong>.
+              </p>
+              <p>
+                O tratamento desses dados obedece estritamente ao <strong>Artigo 7º, § 3º e § 4º da Lei 13.709/2018 (LGPD)</strong>, que autoriza expressamente o tratamento de dados cujo acesso é tornado público pelo próprio poder público, dispensando a exigência de consentimento prévio, resguardados os princípios de boa-fé e transparência.
+              </p>
+            </section>
+
+            <section class="policy-block">
+              <h3>2. Política de Cookies e Métricas de Acesso</h3>
+              <p>
+                Nosso site utiliza um sistema transparente de cookies em conformidade com o <strong>Google Consent Mode v2</strong>:
+              </p>
+              <ul>
+                <li><strong>Cookies Estritamente Necessários:</strong> Registram apenas suas preferências de tema (claro/escuro) e sua decisão de consentimento. Ficam salvos localmente via <code>localStorage</code> e não rastreiam sua pessoa.</li>
+                <li><strong>Cookies de Análise e Métricas (Google Analytics 4):</strong> Vêm <strong>desativados por padrão</strong> (consentimento negado) e são ativados única e exclusivamente se você clicar expressamente em <em>"Aceitar Todos"</em> no nosso banner de cookies. Servem apenas para contagem agregada de visitas e cliques de download.</li>
+                <li>Você pode alterar ou revogar sua decisão a qualquer momento clicando em <strong>"Preferências de Cookies"</strong> no rodapé de qualquer página.</li>
+              </ul>
+            </section>
+
+            <section class="policy-block">
+              <h3>3. Segurança da Informação</h3>
+              <p>
+                Toda a comunicação entre seu navegador e nossos servidores é realizada via protocolo criptografado <strong>HTTPS (TLS)</strong>. Adotamos cabeçalhos rígidos de segurança HTTP (como <code>X-Content-Type-Options: nosniff</code>, <code>X-Frame-Options: SAMEORIGIN</code> e <code>Referrer-Policy</code>) para impedir ataques de sequestro de sessão e injeção de código.
+              </p>
+            </section>
+
+            <section class="policy-block">
+              <h3>4. Direitos dos Titulares de Dados (Art. 18 da LGPD)</h3>
+              <p>
+                Embora os dados corporativos sejam originários de bases governamentais públicas oficiais, garantimos aos cidadãos e sócios a possibilidade de solicitar esclarecimentos ou relatar inconsistências em dados cadastrais exibidos.
+              </p>
+              <p>
+                <em>Nota importante:</em> O OpenCNPJ reflete fielmente as bases públicas da Receita Federal do Brasil. Para alterações em razão social, endereço ou quadro societário na fonte, a empresa deve formalizar a retificação diretamente perante a Receita Federal ou Junta Comercial competente.
+              </p>
+            </section>
+
+            <section class="policy-block">
+              <h3>5. Contato e Encarregado de Proteção de Dados (DPO)</h3>
+              <p>
+                Para exercer seus direitos de privacidade, esclarecer dúvidas sobre esta política ou enviar solicitações técnicas, entre em contato através dos nossos canais comunitários:
+              </p>
+              <div class="contact-card">
+                <p><i class="fab fa-github"></i> <strong>GitHub:</strong> <a href="https://github.com/opencaramelo/opencnpj/issues" target="_blank" rel="noopener noreferrer">Repositório Oficial do OpenCNPJ</a></p>
+                <p><i class="fas fa-envelope"></i> <strong>E-mail Institucional:</strong> <a href="mailto:contato@opencaramelo.com">contato&#64;opencaramelo.com</a></p>
+                <p><i class="fas fa-paw"></i> <strong>Ecossistema Tutor:</strong> <a href="https://opencaramelo.com" target="_blank" rel="noopener noreferrer">OpenCaramelo Brasil</a></p>
+              </div>
+            </section>
+          </div>
+        </article>
+      }
+
+      <!-- Navegação Rápida entre Seções no final -->
+      <div class="policy-bottom-nav">
+        <div class="nav-prompt">
+          <span>Precisa consultar outra solução do ecossistema?</span>
+        </div>
+        <div class="nav-buttons">
+          <button type="button" class="btn btn-secondary" (click)="setTab('extensao')" [class.btn-active]="activeTab() === 'extensao'">
+            <i class="fas fa-puzzle-piece"></i> Política da Extensão
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="setTab('mobile')" [class.btn-active]="activeTab() === 'mobile'">
+            <i class="fas fa-mobile-screen-button"></i> Política do Mobile
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="setTab('geral')" [class.btn-active]="activeTab() === 'geral'">
+            <i class="fas fa-globe"></i> Política Geral &amp; LGPD
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>

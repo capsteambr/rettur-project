@@ -1,0 +1,218 @@
+<header class="page-header">
+  <div class="header-container">
+    <a routerLink="/" class="logo">
+      <img src="assets/opencnpj_logo.png" alt="OpenCNPJ" class="header-logo-img">
+      <span class="logo-text">OpenCNPJ</span>
+    </a>
+
+    <nav class="header-desktop-nav desktop-only no-print">
+      <div class="nav-dropdown-wrapper" 
+           (mouseenter)="isDownloadsHovered.set(true)" 
+           (mouseleave)="isDownloadsHovered.set(false)">
+        <span class="header-nav-link cursor-pointer" 
+              (click)="toggleDownloadsPin($event)">
+          <i class="fas fa-download"></i> Downloads <i class="fas fa-chevron-down" style="font-size: 0.6rem; margin-left: 4px;"></i>
+        </span>
+        @if (isDownloadsHovered() || isDownloadsPinned()) {
+          <div class="nav-dropdown-content force-display">
+            <a routerLink="/downloads/OpenCNPJ/Extensao" (click)="isDownloadsPinned.set(false)" class="nav-dropdown-item"><i class="fas fa-puzzle-piece"></i> Extensão de Navegador</a>
+            <a routerLink="/downloads/OpenCNPJ/Mobile" (click)="isDownloadsPinned.set(false)" class="nav-dropdown-item"><i class="fas fa-mobile-screen"></i> App Mobile</a>
+          </div>
+        }
+      </div>
+      <a routerLink="/api" routerLinkActive="active" class="header-nav-link"><i class="fas fa-book"></i> Documentação API</a>
+    </nav>
+
+    <div class="nav-and-actions">
+      <!-- Search Bar (Visible on non-home pages) -->
+      @if (showSearch()) {
+        <form class="header-search-form" [class.mobile-open]="showMobileSearch()" (ngSubmit)="submitSearch()">
+          <div class="search-input-wrapper">
+            <i class="fas fa-magnifying-glass search-icon"></i>
+            <input 
+              type="text" 
+              [ngModel]="searchInput()" 
+              (ngModelChange)="onSearchChange($event)" 
+              name="headerSearch" 
+              placeholder="Pesquisar CNPJ..." 
+              autocomplete="off"
+              maxlength="18"
+              inputmode="numeric"
+              class="header-search-input">
+            
+            <div class="header-search-actions">
+              @if (searchInput()) {
+                <button type="button" class="btn-header-action" (click)="clearSearch()" title="Limpar e voltar ao início">
+                  <i class="fas fa-times-circle"></i>
+                </button>
+              }
+
+              @if (searchHistory().length > 0) {
+                <div class="header-history-dropdown-anchor">
+                  <button 
+                    type="button" 
+                    class="btn-header-action btn-history" 
+                    [class.active]="isHistoryExpanded()" 
+                    (click)="toggleHistory()" 
+                    title="Histórico de consultas recentes">
+                    <i class="fas fa-rotate-left"></i>
+                  </button>
+
+                  @if (isHistoryExpanded()) {
+                    <div class="history-floating-dropdown" role="menu">
+                      <div class="history-dropdown-head">
+                        <span><i class="fas fa-history"></i> Consultas Recentes</span>
+                        <button type="button" class="btn-clear-dropdown-history" (click)="clearHistory()" title="Limpar histórico">
+                          <i class="fas fa-trash-can"></i> Limpar
+                        </button>
+                      </div>
+                      <div class="history-dropdown-list">
+                        @for (item of searchHistory(); track item.cnpj) {
+                          <button 
+                            type="button" 
+                            class="history-dropdown-item" 
+                            (click)="selectPreset(item.cnpj)">
+                            <span class="dropdown-cnpj">{{ cnpjService.formatCnpj(item.cnpj) }}</span>
+                            @if (item.razaoSocial) {
+                              <span class="dropdown-name">{{ item.razaoSocial }}</span>
+                            }
+                          </button>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        </form>
+      }
+
+      <div class="header-actions">
+        <!-- Mobile Search Toggle (Visible only on mobile when search is active) -->
+        @if (showSearch()) {
+          <button 
+            type="button" 
+            class="header-action-btn mobile-only-btn" 
+            (click)="toggleMobileSearch()"
+            aria-label="Abrir pesquisa"
+            title="Pesquisar">
+            <i class="fas fa-magnifying-glass"></i>
+          </button>
+        }
+
+        
+        <!-- Home Page Only: Search Modes -->
+        @if (!showSearch()) {
+          <div class="desktop-only home-modes-group no-print" style="display: inline-flex; align-items: center; gap: 0.35rem; background-color: var(--bg-card); border: 1px solid var(--border-color); padding: 0.25rem 0.5rem; border-radius: 999px; margin-right: 0.5rem;">
+            <a routerLink="/" class="exp-badge mode-icon" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" title="Ficha Padrão">
+              <i class="fas fa-file-invoice"></i>
+            </a>
+            <a routerLink="/terminal" class="exp-badge mode-icon" routerLinkActive="active" title="Terminal Linux">
+              <i class="fab fa-linux"></i>
+            </a>
+            <a routerLink="/windows" class="exp-badge mode-icon" routerLinkActive="active" title="Windows 98">
+              <i class="fab fa-windows"></i>
+            </a>
+          </div>
+        }
+        
+        <!-- OpenCaramelo Logo -->
+        <a 
+          href="https://opencaramelo.com" 
+          target="_blank" 
+          class="header-action-btn desktop-only" 
+          aria-label="Ir para OpenCaramelo"
+          title="Iniciativa OpenCaramelo">
+          <img src="assets/caramelo2.png" alt="OpenCaramelo" style="width: 20px; height: 20px; border-radius: 50%; object-fit: cover;">
+        </a>
+        
+        <!-- Theme Toggle -->
+        <button 
+          id="theme-toggle" 
+          class="header-action-btn"
+          (click)="toggleTheme()" 
+          aria-label="Mudar tema" 
+          [title]="themeService.isLight() ? 'Alternar para tema escuro' : 'Alternar para tema claro'">
+          <i id="theme-toggle-icon" class="fas" [class.fa-sun]="!themeService.isLight()" [class.fa-moon]="themeService.isLight()"></i>
+        </button>
+
+        <!-- Coffee Donate -->
+        <button 
+          type="button"
+          (click)="openDonationModal()"
+          class="header-action-btn coffee-donate-link desktop-only" 
+          aria-label="Pague um Café para os Desenvolvedores"
+          title="Pague um Café (Apoiar o Projeto)">
+          <i class="fas fa-mug-hot"></i>
+        </button>
+
+        <!-- Hamburger Button -->
+        <button 
+          type="button" 
+          class="header-action-btn hamburger-btn" 
+          (click)="toggleMenu()"
+          aria-label="Menu"
+          title="Menu Principal">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Lateral Menu Overlay & Sidebar -->
+@if (isMenuOpen) {
+  <div class="sidebar-overlay" (click)="closeMenu()"></div>
+  <aside class="sidebar-menu" [class.open]="isMenuOpen">
+    <div class="sidebar-header">
+      <div class="logo">
+        <img src="assets/opencnpj_logo.png" alt="OpenCNPJ" class="header-logo-img">
+        <span class="logo-text">OpenCNPJ</span>
+      </div>
+      <button class="close-sidebar-btn" (click)="closeMenu()" aria-label="Fechar Menu">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="sidebar-content">
+      <nav class="sidebar-nav">
+        <h4 class="sidebar-section-title">Menu Principal</h4>
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">
+          <i class="fas fa-home"></i> Início
+        </a>
+        <div class="sidebar-section-title" style="margin-top: 1rem;"><i class="fas fa-download"></i> Downloads</div>
+        <a routerLink="/downloads/OpenCNPJ/Extensao" routerLinkActive="active" (click)="closeMenu()" style="padding-left: 2rem;">
+          <i class="fas fa-puzzle-piece"></i> Extensão
+        </a>
+        <a routerLink="/downloads/OpenCNPJ/Mobile" routerLinkActive="active" (click)="closeMenu()" style="padding-left: 2rem;">
+          <i class="fas fa-mobile-screen"></i> App Mobile
+        </a>
+        <a routerLink="/api" routerLinkActive="active" (click)="closeMenu()">
+          <i class="fas fa-book"></i> Documentação API
+        </a>
+      </nav>
+
+      <div class="sidebar-divider"></div>
+      <nav class="sidebar-nav">
+        <h4 class="sidebar-section-title">Apoie o Projeto</h4>
+        <a href="javascript:void(0)" (click)="openDonationModal(); closeMenu()" class="highlight-donate">
+          <i class="fas fa-mug-hot"></i> Pague um Café para o Dev
+        </a>
+      </nav>
+
+      <div class="sidebar-divider"></div>
+
+      <nav class="sidebar-nav">
+        <h4 class="sidebar-section-title">Ecossistema</h4>
+        <a href="https://opencaramelo.com" target="_blank" rel="noopener noreferrer" (click)="closeMenu()">
+          <img src="assets/caramelo2.png" alt="OpenCaramelo" class="sidebar-icon-img">
+          OpenCaramelo (Iniciativa Pai)
+        </a>
+        <a href="https://github.com/opencaramelo/opencnpj" target="_blank" rel="noopener noreferrer" (click)="closeMenu()">
+          <i class="fab fa-github"></i> GitHub (Open Source)
+        </a>
+      </nav>
+    </div>
+  </aside>
+}

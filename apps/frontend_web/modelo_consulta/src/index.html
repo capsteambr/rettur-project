@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="no-transitions">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0A101C" id="meta-theme-color">
+
+  <!-- Detecção e aplicação imediata de tema (Zero Flash / FOUC) -->
+  <script>
+    (function() {
+      try {
+        var saved = null;
+        try { saved = localStorage.getItem('opencnpj_theme'); } catch(e) {}
+        if (!saved) {
+          var match = document.cookie.match(/(?:^|; )opencnpj_theme=([^;]*)/);
+          if (match) saved = match[1];
+        }
+        var isDark;
+        if (saved === 'dark') {
+          isDark = true;
+        } else if (saved === 'light') {
+          isDark = false;
+        } else {
+          // Padrão: preferência do navegador do usuário
+          isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        }
+
+        var root = document.documentElement;
+        if (isDark) {
+          root.classList.remove('light-theme');
+          root.classList.add('dark-theme');
+          root.style.colorScheme = 'dark';
+        } else {
+          root.classList.add('light-theme');
+          root.classList.remove('dark-theme');
+          root.style.colorScheme = 'light';
+        }
+
+        var meta = document.getElementById('meta-theme-color');
+        if (meta) {
+          meta.setAttribute('content', isDark ? '#0A101C' : '#F8FAFC');
+        }
+      } catch(e) {}
+    })();
+  </script>
+
+  <title>OpenCNPJ | API Gratuita e de Alta Performance para Consulta de Dados Cadastrais</title>
+  
+  <base href="/">
+
+  <meta name="description" content="API REST Gratuita e de alta performance para consulta de dados cadastrais de CNPJ, coletados de fontes oficiais da Receita Federal. Ideal para e-commerce, ERPs e automações.">
+  <meta name="keywords" content="cnpj, consulta cnpj, api cnpj, api receita federal, empresas brasil, dados cadastrais, razao social, socios cnpj, opencnpj, opencaramelo, download app cnpj">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="OpenCNPJ &amp; OpenCaramelo">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://opencnpj.com/">
+
+  <!-- Open Graph / Facebook / LinkedIn / WhatsApp -->
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://opencnpj.com/">
+  <meta property="og:site_name" content="OpenCNPJ">
+  <meta property="og:title" content="OpenCNPJ | API Gratuita para Consulta de Dados CNPJ">
+  <meta property="og:description" content="API REST Gratuita e de alta performance para consulta de dados de CNPJ, coletados de fontes oficiais da Receita Federal. Ideal para e-commerce, ERPs e automações.">
+  <meta property="og:image" content="https://opencnpj.com/assets/opencnpj_logo.png">
+  <meta property="og:image:alt" content="Logotipo OpenCNPJ">
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="OpenCNPJ | API Gratuita para Consulta de Dados CNPJ">
+  <meta name="twitter:description" content="API REST Gratuita e de alta performance para consulta de dados cadastrais de CNPJ da Receita Federal.">
+  <meta name="twitter:image" content="https://opencnpj.com/assets/opencnpj_logo.png">
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico?v=3">
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico?v=3">
+  <link rel="apple-touch-icon" href="assets/opencnpj_logo.png?v=3">
+
+  <!-- Google Fonts: Fira Code & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Structured Data / JSON-LD (Schema.org) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "@id": "https://opencnpj.com/#webapp",
+        "name": "OpenCNPJ",
+        "url": "https://opencnpj.com/",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "All",
+        "description": "API e ferramenta de consulta pública e gratuita de dados cadastrais de CNPJ da Receita Federal do Brasil.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "BRL"
+        },
+        "provider": {
+          "@type": "Organization",
+          "name": "OpenCaramelo",
+          "url": "https://opencaramelo.com"
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://opencnpj.com/#website",
+        "url": "https://opencnpj.com/",
+        "name": "OpenCNPJ",
+        "inLanguage": "pt-BR"
+      }
+    ]
+  }
+  </script>
+
+  <!-- Google Analytics 4 com Consent Mode v2 (LGPD Compliant) -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    
+    // Consentimento padrão: analytics negado até escolha consciente do usuário
+    gtag('consent', 'default', {
+      'analytics_storage': 'denied',
+      'ad_storage': 'denied',
+      'functionality_storage': 'granted',
+      'security_storage': 'granted'
+    });
+
+    // Se já consentiu em visita anterior, restaura a permissão
+    try {
+      if (localStorage.getItem('opencnpj_cookie_consent') === 'accepted') {
+        gtag('consent', 'update', {
+          'analytics_storage': 'granted'
+        });
+      }
+    } catch(e) {}
+  </script>
+  <!-- Tag do Google Analytics (OpenCNPJ) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D1ENPS7FM6"></script>
+  <script>
+    gtag('js', new Date());
+    gtag('config', 'G-D1ENPS7FM6', {
+      'send_page_view': false
+    });
+  </script>
+
+  <!-- Reativa transições após a página estar montada para evitar animação na entrada -->
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      requestAnimationFrame(function() {
+        document.documentElement.classList.remove('no-transitions');
+      });
+    });
+  </script>
+</head>
+<body>
+  <script>
+    (function() {
+      try {
+        if (document.documentElement.classList.contains('light-theme')) {
+          document.body.classList.add('light-theme');
+        } else {
+          document.body.classList.remove('light-theme');
+        }
+      } catch(e) {}
+    })();
+  </script>
+  <app-root></app-root>
+</body>
+</html>
