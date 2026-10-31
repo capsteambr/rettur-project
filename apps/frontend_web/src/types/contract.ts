@@ -1,19 +1,18 @@
 export type RiskLevel = 'BAIXO' | 'MEDIO' | 'ALTO' | 'CRITICO';
 
+export interface AttentionPoint {
+  clause_reference: string;
+  title: string;
+  severity: RiskLevel;
+  original_snippet: string;
+  plain_explanation: string;
+  recommendation: string;
+}
+
 export interface ContractStrength {
   clause_reference: string;
   title: string;
   explanation: string;
-}
-
-export interface ContractTrap {
-  clause_reference: string;
-  title: string;
-  severity: RiskLevel;
-  ambiguity_detected: boolean;
-  original_snippet: string;
-  plain_explanation: string;
-  recommendation: string;
 }
 
 export interface TimelineItem {
@@ -24,49 +23,75 @@ export interface TimelineItem {
 }
 
 export interface ContractAnalysisResponse {
+  id?: string;
+  created_at?: string;
+  expires_at?: string;
   contract_type: string;
   risk_score: number;
   risk_level: RiskLevel;
   summary_plain_text: string;
   strengths: ContractStrength[];
-  weaknesses_and_traps: ContractTrap[];
+  weaknesses_and_traps: AttentionPoint[];
   timeline: TimelineItem[];
   actionable_questions: string[];
+  suggested_practice_areas?: string[];
+  ethical_disclaimer?: string;
 }
 
-export interface ModelInfo {
+export interface ConsultationRecord {
+  id: string; // UUID v4
+  createdAt: string;
+  expiresAt: string;
+  contractType: string;
+  riskScore: number;
+  riskLevel: RiskLevel;
+  fileName?: string;
+  analysis: ContractAnalysisResponse;
+}
+
+export interface Lawyer {
   id: string;
   name: string;
-  description?: string;
-  is_recommended?: boolean;
+  oab: string;
+  state: string;
+  city: string;
+  areas: string[];
+  bio: string;
+  rating: number;
+  review_count: number;
+  phone: string;
+  email: string;
+  verified: boolean;
+  available_online: boolean;
 }
 
-export interface TestConnectionResponse {
-  success: boolean;
-  provider: string;
-  message: string;
-  models: ModelInfo[];
+export interface UserSession {
+  isLoggedIn: boolean;
+  userType: 'client' | 'lawyer';
+  name: string;
+  email: string;
+  documentsAnalyzed: number;
+  maxFreeDocuments: number;
+  oab?: string;
+  subscriptionPlan?: string;
 }
 
-export interface AIProviderConfig {
-  provider: 'gemini' | 'ollama' | 'openai';
-  model_name?: string;
-  api_key?: string;
-  base_url?: string;
-  user_role: string;
+export interface LawyerLead {
+  id: string;
+  clientName: string;
+  clientPhone: string;
+  contractType: string;
+  riskLevel: RiskLevel;
+  date: string;
+  status: 'NOVO' | 'EM_ATENDIMENTO' | 'CONTRATO_FECHADO';
+  initialMessage: string;
 }
 
-export interface ProviderStoreSettings {
-  apiKey?: string;
-  baseUrl?: string;
-  selectedModel: string;
-  availableModels: ModelInfo[];
-}
-
-export interface AppAIState {
-  activeProvider: 'gemini' | 'ollama' | 'openai';
-  user_role: string;
-  gemini: ProviderStoreSettings;
-  ollama: ProviderStoreSettings;
-  openai: ProviderStoreSettings;
+export interface LawyerReview {
+  id: string;
+  clientName: string;
+  rating: number;
+  date: string;
+  comment: string;
+  contractCategory: string;
 }

@@ -7,8 +7,7 @@ app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
     description=(
-        "API do Condinome Panda: Leitor, auditor e simplificador de contratos para pessoas leigas. "
-        "Permite acoplar modelos de IA locais (Ollama) ou em nuvem (Gemini, OpenAI)."
+        "API do Rettur: Triagem e simplificação de contratos para pessoas leigas e conexão ética com advogados da OAB."
     ),
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     docs_url="/docs",
@@ -31,7 +30,7 @@ app.include_router(api_router, prefix=settings.API_V1_STR)
 @app.get("/", tags=["Geral"])
 async def root():
     return {
-        "message": "Condinome Panda API está operante.",
+        "message": "Rettur API está operante.",
         "docs": "/docs",
         "version": settings.VERSION
     }

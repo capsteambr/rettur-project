@@ -14,9 +14,18 @@ Thumbs.db
 # ==========================================
 # Segredos e Credenciais (LGPD / Segurança)
 # ==========================================
+**/.env
+**/.env.*
 .env
+.env.*
 .env.local
 .env.*.local
+.env.development
+.env.test
+.env.production
+*.env
+!*.env.example
+!**/.env.example
 *.pem
 *.key
 *.cert

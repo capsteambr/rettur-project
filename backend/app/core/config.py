@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str = "Condinome Panda - Leitor de Contratos"
+    PROJECT_NAME: str = "Rettur - Triagem de Contratos"
     VERSION: str = "1.0.0"
     API_V1_STR: str = "/api/v1"
 

@@ -2,40 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
-:root, html.dark-theme, body.dark-theme {
-  --bg-main: #0A101C;
-  --bg-card: #141C2E;
-  --bg-card-hover: #1A2438;
-  --bg-secondary: #0F172A;
-  --primary-text: #F1F5F9;
-  --secondary-text: #94A3B8;
-  --accent-color: #00CCB3;
-  --accent-hover: #1AE0C0;
-  --border-color: #1E293B;
-  --code-bg: #111827;
+:root, html.dark, html.dark-theme, body.dark-theme {
+  --bg-main: 10, 16, 28;
+  --bg-card: 20, 28, 46;
+  --bg-card-hover: 26, 36, 56;
+  --bg-secondary: 15, 23, 42;
+  --primary-text: 241, 245, 249;
+  --secondary-text: 148, 163, 184;
+  --accent-color: 0, 204, 179;
+  --accent-hover: 26, 224, 192;
+  --border-color: 30, 41, 59;
+  --code-bg: 17, 24, 39;
   --card-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
   color-scheme: dark;
 }
 
-html.light-theme, body.light-theme {
-  --bg-main: #F8FAFC;
-  --bg-card: #FFFFFF;
-  --bg-card-hover: #F1F5F9;
-  --bg-secondary: #EDF2F7;
-  --primary-text: #0F172A;
-  --secondary-text: #64748B;
-  --accent-color: #0D9488;
-  --accent-hover: #0F766E;
-  --border-color: #E2E8F0;
-  --code-bg: #F1F5F9;
+html.light, html.light-theme, body.light-theme {
+  --bg-main: 248, 250, 252;
+  --bg-card: 255, 255, 255;
+  --bg-card-hover: 241, 245, 249;
+  --bg-secondary: 237, 242, 247;
+  --primary-text: 15, 23, 42;
+  --secondary-text: 100, 116, 139;
+  --accent-color: 13, 148, 136;
+  --accent-hover: 15, 118, 110;
+  --border-color: 226, 232, 240;
+  --code-bg: 241, 245, 249;
   --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
   color-scheme: light;
 }
 
 body {
   margin: 0;
-  background-color: var(--bg-main);
-  color: var(--primary-text);
+  background-color: rgb(var(--bg-main));
+  color: rgb(var(--primary-text));
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   min-height: 100vh;
   transition: background-color 0.25s ease, color 0.25s ease;

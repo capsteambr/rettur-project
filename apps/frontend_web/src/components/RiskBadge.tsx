@@ -15,31 +15,31 @@ export const RiskBadge: React.FC<RiskBadgeProps> = ({ level, score, showIcon = t
   > = {
     BAIXO: {
       label: 'Risco Baixo (Seguro)',
-      bg: 'bg-emerald-50',
-      text: 'text-emerald-700',
-      border: 'border-emerald-200',
-      icon: <ShieldCheck className="w-4 h-4 text-emerald-600" />,
+      bg: 'bg-emerald-500/10 dark:bg-emerald-500/20',
+      text: 'text-emerald-700 dark:text-emerald-300',
+      border: 'border-emerald-500/30',
+      icon: <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />,
     },
     MEDIO: {
       label: 'Risco Médio (Atenção)',
-      bg: 'bg-amber-50',
-      text: 'text-amber-700',
-      border: 'border-amber-200',
-      icon: <Info className="w-4 h-4 text-amber-600" />,
+      bg: 'bg-amber-500/10 dark:bg-amber-500/20',
+      text: 'text-amber-700 dark:text-amber-300',
+      border: 'border-amber-500/30',
+      icon: <Info className="w-4 h-4 text-amber-600 dark:text-amber-400" />,
     },
     ALTO: {
       label: 'Risco Alto (Perigo)',
-      bg: 'bg-orange-50',
-      text: 'text-orange-700',
-      border: 'border-orange-200',
-      icon: <AlertTriangle className="w-4 h-4 text-orange-600" />,
+      bg: 'bg-orange-500/10 dark:bg-orange-500/20',
+      text: 'text-orange-700 dark:text-orange-300',
+      border: 'border-orange-500/30',
+      icon: <AlertTriangle className="w-4 h-4 text-orange-600 dark:text-orange-400" />,
     },
     CRITICO: {
       label: 'Risco Crítico (Abusivo)',
-      bg: 'bg-rose-50',
-      text: 'text-rose-700',
-      border: 'border-rose-200',
-      icon: <AlertOctagon className="w-4 h-4 text-rose-600" />,
+      bg: 'bg-rose-500/10 dark:bg-rose-500/20',
+      text: 'text-rose-700 dark:text-rose-300',
+      border: 'border-rose-500/30',
+      icon: <AlertOctagon className="w-4 h-4 text-rose-600 dark:text-rose-400" />,
     },
   };
 
@@ -52,7 +52,7 @@ export const RiskBadge: React.FC<RiskBadgeProps> = ({ level, score, showIcon = t
       {showIcon && current.icon}
       <span>{current.label}</span>
       {score !== undefined && (
-        <span className="ml-1 px-1.5 py-0.2 rounded-md bg-white/70 text-slate-800 text-[11px]">
+        <span className="ml-1 px-1.5 py-0.5 rounded-md bg-secondary-bg text-primary-text border border-border-custom text-[11px]">
           {score}/10
         </span>
       )}

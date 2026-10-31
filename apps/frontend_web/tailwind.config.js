@@ -1,4 +1,13 @@
 /** @type {import('tailwindcss').Config} */
+function withOpacity(variableName) {
+  return ({ opacityValue }) => {
+    if (opacityValue !== undefined) {
+      return `rgba(var(${variableName}), ${opacityValue})`;
+    }
+    return `rgb(var(${variableName}))`;
+  };
+}
+
 export default {
   content: [
     "./index.html",
@@ -8,15 +17,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        'main': 'var(--bg-main)',
-        'card': 'var(--bg-card)',
-        'card-hover': 'var(--bg-card-hover)',
-        'secondary-bg': 'var(--bg-secondary)',
-        'primary-text': 'var(--primary-text)',
-        'secondary-text': 'var(--secondary-text)',
-        'border-custom': 'var(--border-color)',
-        'accent': 'var(--accent-color)',
-        'accent-hover': 'var(--accent-hover)',
+        'main': withOpacity('--bg-main'),
+        'card': withOpacity('--bg-card'),
+        'card-hover': withOpacity('--bg-card-hover'),
+        'secondary-bg': withOpacity('--bg-secondary'),
+        'primary-text': withOpacity('--primary-text'),
+        'secondary-text': withOpacity('--secondary-text'),
+        'border-custom': withOpacity('--border-color'),
+        'accent': withOpacity('--accent-color'),
+        'accent-hover': withOpacity('--accent-hover'),
       },
       fontFamily: {
         mono: ['"Fira Code"', 'monospace'],

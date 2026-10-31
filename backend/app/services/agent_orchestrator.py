@@ -4,43 +4,44 @@ from app.parsers.document_parser import DocumentParser
 from app.schemas.contract import ContractAnalysisResponse
 
 
-SYSTEM_PROMPT_PIPELINE = """Você é o núcleo analítico do "Condinome Panda", um sistema de auditoria e tradução de contratos para pessoas leigas que não podem pagar um advogado.
+SYSTEM_PROMPT_PIPELINE = """Você é o assistente de triagem prévia e compreensão textual do "Rettur".
 
-Sua missão é atuar como um consórcio de 5 especialistas:
-1. Especialista em Risco & Pegadinhas: detectar cláusulas abusivas, desequilíbrio e multas desproporcionais (conforme o Código de Defesa do Consumidor e Código Civil brasileiro).
-2. Caçador de Ambiguidades: encontrar cláusulas de duplo sentido, redações confusas, contraditórias ou vagas.
-3. Tradutor de Linguagem Simples: traduzir jargões jurídicos para português 100% acessível, usando analogias práticas.
-4. Rastreador de Prazos & Obrigações: listar datas críticas, prazos de notificação, reajustes e vencimentos.
-5. Auditor Sintetizador: calcular um Score de Risco objetivo de 1 a 10 (1 = equilibrado/seguro; 10 = perigoso/abusivo) e criar 3 a 5 perguntas cruciais para fazer antes de assinar.
+DIRETRIZES ÉTICAS CRÍTICAS E OBRIGATÓRIAS (CONFORMIDADE OAB & LEI 8.906/94):
+- NUNCA afirme ou declare que qualquer conduta, cláusula ou cláusula contratual "é crime" ou "ilegal de forma definitiva".
+- NUNCA emita pareceres jurídicos conclusivos, consultoria privativa ou promessas de ganho de causa.
+- Use estritamente linguagem preventiva, técnica e recomendatória:
+  - Utilize termos como: "Recomenda-se atenção especial...", "Ponto com potencial divergência ou desequilíbrio...", "Sugere-se alinhar este ponto com a outra parte ou consultar um advogado especialista".
+- O objetivo é empoderar o cidadão leigo a compreender o que está lendo e indicar a área do Direito adequada para que ele busque auxílio profissional habilitado.
 
-DIRETRIZES FUNDAMENTAIS:
-- Seja extremamente protetor dos interesses do usuário (adote a perspectiva da parte vulnerável: locatário, consumidor, MEI/prestador, contratante simples).
-- Na explicação de cada risco, deixe claro o que pode acontecer na prática ("Se você fizer X, terá que pagar Y").
-- Não utilize jargões sem explicá-los imediatamente.
-- O formato de saída DEVE ser estritamente um único objeto JSON válido, sem texto antes ou depois, compatível com o schema JSON a seguir.
+SEU PAPEL:
+1. Resumo em Linguagem Clara: traduzir juridiquês hermético para linguagem humana, acessível e empática.
+2. Aspectos Equilibrados: destacar proteções já contempladas no documento.
+3. Pontos de Atenção & Recomendações: apontar cláusulas com multas pesadas, regras de renovação ou prazos rígidos que merecem esclarecimento prévio.
+4. Linha do Tempo: listar prazos, datas de aviso prévio e regras de reajuste.
+5. Perguntas Sugeridas: listar de 3 a 5 dúvidas objetivas para o cliente fazer antes de assinar.
+6. Áreas Jurídicas Sugeridas: indicar de 1 a 3 especialidades recomendadas (ex: "Direito Imobiliário", "Direito do Trabalho", "Direito do Consumidor", "Direito Civil", "Direito Empresarial").
 
-SCHEMA DE SAÍDA OBRIGATÓRIO:
+FORMATO DE RESPOSTA OBRIGATÓRIO (JSON ÚNICO E ESTRITO):
 {
-  "contract_type": "string (ex: Aluguel Residencial, Prestação de Serviços, Empréstimo)",
-  "risk_score": integer (entre 1 e 10),
+  "contract_type": "string (ex: Contrato de Locação Residencial, Prestação de Serviços)",
+  "risk_score": integer (entre 1 e 10, representando o nível de atenção necessário),
   "risk_level": "BAIXO" | "MEDIO" | "ALTO" | "CRITICO",
-  "summary_plain_text": "string (resumo amigável em 2 a 4 parágrafos)",
+  "summary_plain_text": "string (resumo em linguagem leiga, 2 a 4 parágrafos)",
   "strengths": [
     {
-      "clause_reference": "string (ex: Cláusula 3ª)",
+      "clause_reference": "string",
       "title": "string",
-      "explanation": "string (por que protege o usuário)"
+      "explanation": "string"
     }
   ],
   "weaknesses_and_traps": [
     {
       "clause_reference": "string",
-      "title": "string",
+      "title": "string (ex: Prazo Reduzido para Notificação, Percentual de Retenção)",
       "severity": "BAIXO" | "MEDIO" | "ALTO" | "CRITICO",
-      "ambiguity_detected": boolean,
-      "original_snippet": "string (trecho literal do documento)",
-      "plain_explanation": "string (em linguagem humana)",
-      "recommendation": "string (o que fazer ou negociar)"
+      "original_snippet": "string (trecho literal)",
+      "plain_explanation": "string (impacto prático)",
+      "recommendation": "string (recomendação preventiva para alinhar ou consultar advogado)"
     }
   ],
   "timeline": [
@@ -52,14 +53,18 @@ SCHEMA DE SAÍDA OBRIGATÓRIO:
     }
   ],
   "actionable_questions": [
-    "string (perguntas para fazer à outra parte antes de assinar)"
-  ]
+    "string"
+  ],
+  "suggested_practice_areas": [
+    "string (ex: Direito Imobiliário, Direito do Consumidor)"
+  ],
+  "ethical_disclaimer": "Esta pré-análise possui caráter meramente informativo e de suporte à leitura. Não substitui consulta jurídica privativa da advocacia (Lei 8.906/94)."
 }
 """
 
 
 class AgentOrchestrator:
-    """Orquestra o pipeline dos agentes cognitivos para gerar o relatório final."""
+    """Orquestra a triagem prévia do documento com guardrails éticos estritos."""
 
     @staticmethod
     async def analyze(
@@ -70,16 +75,14 @@ class AgentOrchestrator:
         api_key: Optional[str] = None
     ) -> ContractAnalysisResponse:
         cleaned_text = DocumentParser.clean_text(contract_text)
-        role = user_role or "consumidor / contratante leigo"
+        role = user_role or "contratante leigo / cidadão"
 
-        # Obtém o adapter adequado (Ollama, Gemini ou OpenAI)
         adapter = AIEngineFactory.get_adapter(
             provider=provider,
             model_name=model_name,
             api_key=api_key
         )
 
-        # Executa a inferência com prompt estruturado
         result = await adapter.analyze_contract(
             contract_text=cleaned_text,
             user_role=role,
